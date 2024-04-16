@@ -5,14 +5,14 @@ import React, { useState } from "react";
 import { TbTruckDelivery } from "react-icons/tb";
 import { GiReturnArrow } from "react-icons/gi";
 import { CiHeart } from "react-icons/ci";
-import { Swiper, SwiperSlide } from "swiper/react";
+// import { Swiper, SwiperSlide } from "swiper/react";
 
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
+// import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "swiper/css/scrollbar";
+// import "swiper/css";
+// import "swiper/css/navigation";
+// import "swiper/css/pagination";
+// import "swiper/css/scrollbar";
 
 export default function page() {
   const [count, setCount] = useState(0);
