@@ -1,7 +1,6 @@
 import Button from "@/Components/Modules/Button/Button";
 import ButtonWithoutBg from "@/Components/Modules/ButtonWithoutBg/ButtonWithoutBg";
-import SideBar from "@/Components/Modules/SideBar/SideBar";
-import React, { useState } from "react";
+import React from "react";
 
 export default function page() {
   return (

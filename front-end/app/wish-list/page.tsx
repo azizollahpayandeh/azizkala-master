@@ -11,7 +11,6 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import Product from "@/Components/Modules/Product/product";
 import ButtonWithoutBg from "@/Components/Modules/ButtonWithoutBg/ButtonWithoutBg";
-import Button from "@/Components/Modules/Button/Button";
 import Image from "next/image";
 
 export default function page() {
