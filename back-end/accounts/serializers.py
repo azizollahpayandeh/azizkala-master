@@ -12,11 +12,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         max_length=11,
         validators=[RegexValidator(regex=r'^09\d{9}$', message='Enter a valid 11 digit number starts with 09')])
 
-    _password = serializers.CharField(source='password', label='پسورد')
+    # _password = serializers.CharField(source='password', label='پسورد')
 
     class Meta:
         model = User
-        fields = ('phone_number', 'username', '_password')
+        fields = ('phone_number', 'username', 'password')
 
         # extra_kwargs = {
         #     'phone': {'required': True},
@@ -35,7 +35,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             username=validated_data['username'],
         )
 
-        # user.set_password(validated_data['password1'])
+        user.set_password(validated_data['password'])
         # profile = Profile.objects.create(user=user)
         #
         # profile.save()

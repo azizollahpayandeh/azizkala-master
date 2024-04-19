@@ -28,7 +28,6 @@ class OrderView(APIView):
 
     def post(self, request, format=None):
         serializer = OrderSerializer()
-
         try:
             dashboard = Dashboard.objects.get(user__exact=request.user)
 
@@ -41,38 +40,57 @@ class OrderView(APIView):
         carts = Cart.objects.filter(user__exact=request.user)
 
         if not carts:
+
             return Response(
                 status=status.HTTP_404_NOT_FOUND,
                 data={'detail': 'there is no cart to be an order'})
 
-        order = Order.objects.create(dashboard=dashboard)
         admin_note = ''
-        order.save(False)
+        products = []
+        total = 0
 
         for cart in carts:
-            if cart.quantity >= 1:
-                order.products.add(get_object_or_404(ProductVariation,
-                                                     id=cart.product.product.id,
-                                                     color__name__contains=cart.color))
+            try:
+                if cart.quantity >= 1:
+                    products.append(ProductVariation.objects.get(id=cart.product.id,
+                                                                 color__name__contains=cart.color).id)
 
-                order.total += cart.quantity * cart.product.price_with_discount
-                admin_note += f'{cart.product.id}-{cart.product}-{cart.color}-{cart.quantity}&&'
+                    total += cart.quantity * cart.product.price if not cart.product.discount \
+                        else cart.quantity * (cart.product.price * (1 - cart.product.discount / 100))
 
-            cart.delete()
+                    admin_note += f'{cart.product.id}-{cart.product}-{cart.color}-{cart.quantity}&&'
 
-        order.admin_note = admin_note[:-2]
-        order.save()
-        return Response(
-            status=status.HTTP_200_OK,
-            data={'detail': 'order created'})
+                cart.delete()
+
+            except ProductVariation.DoesNotExist:
+                continue
+        else:
+            if products:
+                order = Order.objects.create(dashboard=dashboard,
+                                             admin_note=admin_note[:-2],
+                                             total=total)
+                order.products.add(*products)
+                order.save()
+                return Response(
+                    status=status.HTTP_200_OK,
+                    data={'detail': 'order created'})
+            return Response(
+                status=status.HTTP_200_OK,
+                data={'detail': 'there is no product to be order'})
 
     def delete(self, request, format=None):
+        if 'code' in request.data:
+            code = request.data['code']
+            order = get_object_or_404(Order, dashboard__user__exact=request.user, code__exact=code)
+            # order.products.clear(id=product_id)
+            order.status = 'Canceled'
+            order.save()
 
-        product_id = request.data['product_id']
-        order = get_object_or_404(Order, dashboard__user__exact=request.user)
-        order.products.clear(id=product_id)
+            return Response(
+                status=status.HTTP_200_OK,
+                data={'detail': 'order cancelled'})
 
         return Response(
             status=status.HTTP_200_OK,
-            data={'detail': 'order created'})
+            data={'detail': 'enter order code'})
 

@@ -25,6 +25,11 @@ class CartEditView(APIView):
     def post(self, request, format=None):
         serializer = CartSerializer(data=request.data)
 
+        if not 'quantity' in request.data:
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST,
+                data={"detail": "quantity is required !"})
+
         if serializer.is_valid():
             quantity = serializer.validated_data['quantity']
             color = serializer.validated_data['color']

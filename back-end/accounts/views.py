@@ -45,12 +45,11 @@ class ForgotPasswordView(APIView):
                 data={'detail': {'phone_number': 'required'}})
 
         user = None
-        if 'phone_number' in request.data:
-            user = get_object_or_404(User, phone_number=request.data['phone_number'])
+        user = get_object_or_404(User, phone_number=request.data['phone_number'])
 
         # mail_subject = 'Reset Your Password'
         code = random.randint(1000, 9999)
-        otp = Otp.objects.create(phone_number=request.data['phone_number'], code=code)
+        Otp.objects.create(phone_number=request.data['phone_number'], code=code)
         name = user.username if user.username else 'کاربر گرامی سایت فلان'
         to_phone_number = user.phone_number
 

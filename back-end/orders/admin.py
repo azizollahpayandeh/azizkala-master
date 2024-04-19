@@ -7,6 +7,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ('code', 'total', 'status', 'create_at')
     search_fields = ('code', 'total', 'dashboard__user__phone_number')
     list_filter = ('status', 'create_at')
+    readonly_fields = ['code', 'create_at', 'update_at']
 
     fieldsets = (
         (None, {'fields': ('code', 'status', 'total',)}),

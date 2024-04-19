@@ -91,6 +91,8 @@ class ProductVariation(models.Model):
     available = AvailableManager()
     created_at = models.DateTimeField(_('Created At'), auto_now_add=True)
 
+    objects = models.Manager()
+
     def __str__(self):
         return f'{self.product.name} {self.product_model}'
 
