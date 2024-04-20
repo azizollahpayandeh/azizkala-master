@@ -1,13 +1,30 @@
 # hi, this is an API-Shop with django-rest-framework 3.15.1
 
-for use this project:
+### for use this project :
 
 * install python
 
-* create an virtual environment, then activate it
+* in project root, create an virtual environment with cmd, then activate it :
 
-- run these commands in **project root** : 
+ ```
+  py -m venv venv
+  ```
 
+* activate env :
+
+
+  - for windows
+  ```
+  venv\scripts\activate.bat
+  ```
+
+  - for linux
+  ```
+  venv/bin/activate
+  ```
+
+* then run these commands :
+  
   - `pip install -r requirements.txt`
 
   - `py manage.py makemigrations`
@@ -33,7 +50,8 @@ for use this project:
 >  ```
 >    - methods : `["POST", ]`
 >    - body (required) : `["phone_number", "password"]`
->    - response : `a json includs "accsess" and "refresh" tokens`
+>    - response : `a json includs "accsess" and "refresh" tokens for header
+>                              ( the header value should be like: "Bearer {access token}" for authenticate and have permission for requests )`
 
 > ---
 
