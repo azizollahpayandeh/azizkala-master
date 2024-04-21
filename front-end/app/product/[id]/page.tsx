@@ -70,7 +70,7 @@ export default function page() {
                   alt="productImages"
                   width={1000}
                   height={600}
-                  className="h-full "
+                  className="h-full w-[95%] "
                 />
               </div>
             </div>
