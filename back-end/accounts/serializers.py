@@ -7,7 +7,7 @@ from django.contrib.auth.password_validation import validate_password
 
 class RegisterSerializer(serializers.ModelSerializer):
     phone_number = serializers.CharField(
-        label='شماره تلفن',
+        label='Phone Number',
         required=True,
         max_length=11,
         validators=[RegexValidator(regex=r'^09\d{9}$', message='Enter a valid 11 digit number starts with 09')])
