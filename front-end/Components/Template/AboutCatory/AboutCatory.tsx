@@ -30,11 +30,11 @@ export default function AboutCategory() {
             }}
             breakpoints={{
               1500: {
-                slidesPerView: 6,
+                slidesPerView: 5,
                 spaceBetween: 70
               },
               1350: {
-                slidesPerView: 5,
+                slidesPerView: 4,
                 spaceBetween: 60
               },
               1020: {

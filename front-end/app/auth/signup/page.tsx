@@ -20,7 +20,7 @@ export default function page() {
         <div className="flex justify-center ">
           <div className="  flex flex-col justify-center w-auto  xl:w-[400px]  gap-[30px] 2xl:gap-[40px] ">
             <div>
-              <h1 className="text-[34px] font-[500]">Log in to Exclusive</h1>
+              <h1 className="text-[34px] font-[500]">Sign up to Exclusive</h1>
               <span className="text-[17px] opacity-80 font-[400]">
                 Enter your details below
               </span>
@@ -43,7 +43,7 @@ export default function page() {
             />
             <div className="flex justify-between items-center ">
               <Link href="#">
-                <Button value="log in" />
+                <Button value="sign up" />
               </Link>
               <p className="">
                 Already have account?{" "}

@@ -49,7 +49,7 @@ export default function Categories() {
             }}
             breakpoints={{
               1500: {
-                slidesPerView: 6,
+                slidesPerView: 5,
               },
               1350: {
                 slidesPerView: 5,

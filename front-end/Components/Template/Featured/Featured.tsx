@@ -22,7 +22,7 @@ export default function Featured() {
                 height={600}
                 alt="Frame684"
                 src="/assets/Frame 684.png"
-                className=" w-[100%]  xl:h-[580px] 2xl:w-[720px] 2xl:h-[626px] md:h-[625px]"
+                className=" w-[100%]   2xl:w-[720px] 2xl:h-[626px] md:h-[625px]"
               />
             </Link>
           </div>
