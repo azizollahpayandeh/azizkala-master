@@ -1,11 +1,43 @@
-import Button from "@/Components/Modules/Button/Button";
+"use client";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import Swal from 'sweetalert2';
+import axios from 'axios'; // Make sure you have axios installed
+import Button from "@/Components/Modules/Button/Button";
 
-export default function page() {
+export default function Page() {
+  const [userName, setUserName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+
+  const signUp = async () => {
+    if (!phone || !userName || !password) {
+      Swal.fire('Validation error', 'All fields are required', 'error');
+      return;
+    }
+  
+    try {
+      const endpoint = "http://127.0.0.1:8000/api/auth/register/";
+      const response = await axios.post(endpoint, {
+        phone_number: phone,
+        username: userName,
+        password: password
+      });
+  
+      if (response.status === 201) {
+        Swal.fire('Success', 'Registration was successful', 'success');
+      } else {
+        Swal.fire('Error', 'Failed to sign up', 'error');
+      }
+    } catch (error) {
+      Swal.fire('Error', "unSuccessfully" , 'error');
+    }
+  };
+
   return (
     <>
+      
       <div className="lg:grid lg:grid-cols-2 mt-[50px]">
         <div className="pic hidden lg:block">
           <Image
@@ -30,19 +62,27 @@ export default function page() {
               type="text"
               placeholder="Name"
               className="outline-none border-b-[2px] border-b-gray-400 lg:w-full w-[300px] pb-[5px]"
+              value={userName}
+              onChange={(event) => setUserName(event.target.value)}
             />
             <input
               type="text"
-              placeholder="Email or Phone Number"
+              placeholder="Phone Number"
               className="outline-none border-b-[2px] border-b-gray-400 lg:w-full w-[300px] pb-[5px]"
+              value={phone}
+              onChange={(event) => setPhone(event.target.value)}
             />
             <input
               type="password"
               placeholder="password"
               className="outline-none border-b-[2px] border-b-gray-400 lg:w-full w-[300px] pb-[5px]"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
             />
             <div className="flex justify-between items-center ">
-              <Link href="#">
+              <Link href="#" onClick={() => {
+                signUp()
+              }}>
                 <Button value="sign up" />
               </Link>
               <p className="">

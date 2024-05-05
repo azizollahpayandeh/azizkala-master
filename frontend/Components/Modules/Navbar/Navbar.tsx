@@ -19,35 +19,35 @@ import UserMenu from "../UserMenu/UserMenu";
 export default function Navbar() {
   const path = usePathname()
 
-const [clickHandlerMenu, setClickHandlerMenu] = useState(false);
-const [clickUserHandlerMenu, setClickUserHandlerMenu] = useState(false);
-const toggleMenu = () => {
-  setClickHandlerMenu(!clickHandlerMenu);
-};
-const handleDocumentClick = (event: MouseEvent) => {
-  if (clickHandlerMenu && menuRef.current && !menuRef.current.contains(event.target as Node)) {
-    setClickHandlerMenu(false);
-  }
-};
-
-useEffect(() => {
-  document.addEventListener("click", handleDocumentClick)
-
-  return () => {
-    document.removeEventListener("click", handleDocumentClick);
+  const [clickHandlerMenu, setClickHandlerMenu] = useState(false);
+  const [clickUserHandlerMenu, setClickUserHandlerMenu] = useState(false);
+  const toggleMenu = () => {
+    setClickHandlerMenu(!clickHandlerMenu);
   };
-}, [clickHandlerMenu])
+  const handleDocumentClick = (event: MouseEvent) => {
+    if (clickHandlerMenu && menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      setClickHandlerMenu(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleDocumentClick)
+
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, [clickHandlerMenu])
 
 
 
-const toggleUserMenu = () => {
-  setClickUserHandlerMenu(!clickUserHandlerMenu);
-}
+  const toggleUserMenu = () => {
+    setClickUserHandlerMenu(!clickUserHandlerMenu);
+  }
 
 
 
 
-const menuRef = useRef<HTMLDivElement | null>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
 
   return (
@@ -57,7 +57,7 @@ const menuRef = useRef<HTMLDivElement | null>(null);
           <div className="flex justify-between items-center w-full  py-3">
             <div>
               <Link href="/">
-                 <Image alt="logo" width={170} height={50} src="/assets/azizkala-logo-black.png"/>
+                <Image alt="logo" width={170} height={50} src="/assets/azizkala-logo-black.png" />
               </Link>
             </div>
             <div className="flex items-center lg:space-x-20  space-x-5">
@@ -87,32 +87,32 @@ const menuRef = useRef<HTMLDivElement | null>(null);
               </div>
 
               <Link href="/wish-list">
-              <IoMdHeartEmpty className="text-gray-500 cursor-pointer" fontSize={25}  />
+                <IoMdHeartEmpty className="text-gray-500 cursor-pointer" fontSize={25} />
               </Link>
 
               <Link href="/cart">
-              <HiOutlineShoppingCart className="text-gray-500 cursor-pointer" fontSize={25}/>
+                <HiOutlineShoppingCart className="text-gray-500 cursor-pointer" fontSize={25} />
               </Link>
 
               {/* start my user section */}
 
-              <FaRegCircleUser className="text-gray-500 cursor-pointer" fontSize={25} onClick={toggleUserMenu}/>
+              {/* <FaRegCircleUser className="text-gray-500 cursor-pointer" fontSize={25} onClick={toggleUserMenu} /> */}
 
               {/* finish my user section */}
 
-              <IoMdMenu className="text-gray-500 lg:hidden cursor-pointer"  onClick={toggleMenu}  fontSize={25}/>
+              <IoMdMenu className="text-gray-500 lg:hidden cursor-pointer" onClick={toggleMenu} fontSize={25} />
             </div>
           </div>
           <div className={`menu flex justify-end  lg:hidden pr-[150px] ${clickHandlerMenu ? "block" : "hidden"}`} ref={menuRef}>
-          <Menu/>
-        </div>
-              {/* start my user section */}
+            <Menu />
+          </div>
+          {/* start my user section */}
+{/* 
+          <div className={`menu flex justify-end  pr-[150px] ${clickUserHandlerMenu ? "block" : "hidden"}`}>
+            <UserMenu />
+          </div> */}
 
-              <div className={`menu flex justify-end  pr-[150px] ${clickUserHandlerMenu ? "block" : "hidden"}`}>
-                  <UserMenu/>
-              </div>
-
-              {/* finish my user section */}
+          {/* finish my user section */}
         </div>
       </header>
     </>
