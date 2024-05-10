@@ -1,9 +1,57 @@
+"use client"
 import Button from "@/Components/Modules/Button/Button";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+import Axios from 'axios';
+import { useRouter } from 'next/navigation'
+import Swal from 'sweetalert2';
+import { useCookies } from 'next-client-cookies';
 
 export default function page() {
+  const [phone, setphone] = useState('');
+  const [password, setPassword] = useState('');
+  const router = useRouter()
+  
+
+  const handleLogin = async (e) => {
+    console.log("clcik");
+    
+    e.preventDefault(); 
+    try {
+      const response = await Axios.post('http://127.0.0.1:8000/api/auth/login/', {
+        phone_number: phone, 
+        password
+      });
+
+      if (response.status === 200) {
+        // // ذخیره توکن‌ها در کوکی
+        useCookies().set('accessToken', response.data.access)
+        useCookies().set('refreshToken', response.data.refresh)
+
+        // نمایش پیغام موفقیت
+        Swal.fire({
+          title: 'successfull',
+          text: 'you loged in successfully',
+          icon: 'success',
+          confirmButtonText: 'ok'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            router.push('/', { scroll: false })
+          }});
+      }
+    } catch (error) {
+      console.log(error);
+      
+      // نمایش خطا
+      Swal.fire({
+        title: 'error',
+        text:'there is problem!!',
+        icon: 'error',
+        confirmButtonText: 'ok'
+      })
+    }
+  };
   return (
     <>
       <div className="lg:grid lg:grid-cols-2 mt-[50px]">
@@ -27,19 +75,21 @@ export default function page() {
             </div>
 
             <input
-              type="text"
-              placeholder="inter your email"
+              type="tel"
+              placeholder="inter your phone"
               className="outline-none border-b-[2px] border-b-gray-400 lg:w-full w-[300px] pb-[5px]"
-
+              value={phone}
+              onChange={(e) => setphone(e.target.value)}
             />
             <input
               type="password"
               placeholder="password"
               className="outline-none border-b-[2px] border-b-gray-400 lg:w-full w-[300px] pb-[5px]"
-
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <div className="flex justify-between items-center">
-              <Link href="#">
+              <Link href="#" onClick={handleLogin} >
                 <Button value="log in" />
               </Link>
               <Link href="">
