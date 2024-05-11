@@ -20,12 +20,18 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+
+
+  
+  
+   
+
   return (
     <html lang="en">
       <body className={roboto.className}>
         <div>
           <div className="pr-[7.7vw]  2xl:pr-[10vw] 2xl:pl-[10vw] pl-[7.7vw]">
-            <Navbar />
+            <Navbar/> {/* ارسال وضعیت ورود به کامپوننت Navbar */}
             <main>{children}</main>
             <div className="lg:bottom-[20px] lg:left-[30px] bottom-[15px] left-[15px] w-[40px] h-[40px] lg:w-[50px] lg:h-[50px] cursor-pointer fixed">
               <ScrollToTop />

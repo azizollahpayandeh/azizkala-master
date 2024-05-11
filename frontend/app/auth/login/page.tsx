@@ -6,52 +6,55 @@ import React, { useState } from "react";
 import Axios from 'axios';
 import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2';
-import { useCookies } from 'next-client-cookies';
+import { setCookie } from 'cookies-next';
 
-export default function page() {
+
+
+
+export default function Page() {
   const [phone, setphone] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter()
-  
+
 
   const handleLogin = async (e) => {
-    console.log("clcik");
-    
-    e.preventDefault(); 
+    e.preventDefault(); // جلوگیری از رفرش صفحه
     try {
       const response = await Axios.post('http://127.0.0.1:8000/api/auth/login/', {
-        phone_number: phone, 
+        phone_number: phone,
         password
       });
 
       if (response.status === 200) {
-        // // ذخیره توکن‌ها در کوکی
-        useCookies().set('accessToken', response.data.access)
-        useCookies().set('refreshToken', response.data.refresh)
+        // ذخیره توکن‌ها در کوکی
+        setCookie('access', `bearer ${response.data.access}`);
+        // Cookie.set('accessToken', response.data.access);
+        // Cookie.set('refreshToken', response.data.refresh);
 
         // نمایش پیغام موفقیت
         Swal.fire({
-          title: 'successfull',
+          title: 'successfull!',
           text: 'you loged in successfully',
           icon: 'success',
           confirmButtonText: 'ok'
         }).then((result) => {
           if (result.isConfirmed) {
             router.push('/', { scroll: false })
-          }});
+          }
+        });
       }
     } catch (error) {
-      console.log(error);
-      
       // نمایش خطا
       Swal.fire({
-        title: 'error',
-        text:'there is problem!!',
+        title: 'error!',
+        text: error.response.data.detail,
         icon: 'error',
         confirmButtonText: 'ok'
-      })
+      });
     }
   };
+
+
   return (
     <>
       <div className="lg:grid lg:grid-cols-2 mt-[50px]">
@@ -66,7 +69,7 @@ export default function page() {
         </div>
 
         <div className="flex justify-center ">
-        <div className="  flex flex-col justify-center w-auto  xl:w-[400px]  gap-[30px] 2xl:gap-[40px] ">
+          <div className="  flex flex-col justify-center w-auto  xl:w-[400px]  gap-[30px] 2xl:gap-[40px] ">
             <div>
               <h1 className="text-[34px] font-[500]">Log in to Exclusive</h1>
               <span className="text-[17px] opacity-80 font-[400]">

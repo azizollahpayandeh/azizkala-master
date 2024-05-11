@@ -12,6 +12,8 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { FaRegCircleUser } from "react-icons/fa6";
 import UserMenu from "../UserMenu/UserMenu";
+import { isLogging } from "@/utils/isLoggesIn/isLoggesIn";
+
 
 
 
@@ -71,9 +73,16 @@ export default function Navbar() {
                 <Link className={`text-gray-700 font-[500] hover:text-gray-500 ${path == "/about" ? "border-b-2 border-gray-500 border-opacity-80" : ""} `} href="/about">
                   About
                 </Link>
-                <Link className={`text-gray-700 font-[500] hover:text-gray-500 ${path == "/auth/signup" ? "border-b-2 border-gray-500 border-opacity-80" : ""} `} href="/auth/signup">
-                  Sign Up
+                {isLogging ? (
+                  <Link className={`text-gray-700 font-[500] hover:text-gray-500 ${path == "/auth/signup" ? "border-b-2 border-gray-500 border-opacity-80" : ""} `} href="/auth/signup">
+                  Log Out
                 </Link>
+                ) : (
+                  <Link className={`text-gray-700 font-[500] hover:text-gray-500 ${path == "/auth/signup" ? "border-b-2 border-gray-500 border-opacity-80" : ""} `} href="/auth/signup">
+                    Sign Up
+                  </Link>
+                )}
+
               </nav>
             </div>
             <div className="flex items-center space-x-4">
@@ -95,9 +104,11 @@ export default function Navbar() {
               </Link>
 
               {/* start my user section */}
-
-              {/* <FaRegCircleUser className="text-gray-500 cursor-pointer" fontSize={25} onClick={toggleUserMenu} /> */}
-
+              {isLogging ? (
+                <FaRegCircleUser className="text-gray-500 cursor-pointer" fontSize={25} onClick={toggleUserMenu} />
+              ) : (
+                <div></div>
+              )}
               {/* finish my user section */}
 
               <IoMdMenu className="text-gray-500 lg:hidden cursor-pointer" onClick={toggleMenu} fontSize={25} />
@@ -106,13 +117,17 @@ export default function Navbar() {
           <div className={`menu flex justify-end  lg:hidden pr-[150px] ${clickHandlerMenu ? "block" : "hidden"}`} ref={menuRef}>
             <Menu />
           </div>
-          {/* start my user section */}
-{/* 
-          <div className={`menu flex justify-end  pr-[150px] ${clickUserHandlerMenu ? "block" : "hidden"}`}>
-            <UserMenu />
-          </div> */}
 
+          {/* start my user section */}
+          {isLogging ? (
+            <div className={`menu flex justify-end  pr-[150px] ${clickUserHandlerMenu ? "block" : "hidden"}`}>
+              <UserMenu />
+            </div>
+          ) : (
+            <div></div>
+          )}
           {/* finish my user section */}
+
         </div>
       </header>
     </>
