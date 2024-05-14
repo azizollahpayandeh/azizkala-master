@@ -132,7 +132,7 @@ export default function Page() {
   const router = useRouter();
   const token = getCookie('access');
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e:any) => {
     e.preventDefault();
     try {
       const response = await Axios.post('http://127.0.0.1:8000/api/auth/login/', {
@@ -153,7 +153,7 @@ export default function Page() {
           }
         });
       }
-    } catch (error) {
+    } catch (error:any) {
       Swal.fire({
         title: 'error!',
         text: error.response.data.detail,
