@@ -9,8 +9,8 @@ class DashboardView(APIView):
     permission_classes = (permissions.IsAuthenticated, )
 
     def get(self, request, format=None):
-        query = Dashboard.objects.get(user__exact=request.user)
-        serializer = DashboardSerializer(query)
+        get, create = Dashboard.objects.get_or_create(user=request.user)
+        serializer = DashboardSerializer(get)
 
         return Response(status=status.HTTP_200_OK,
                         data=serializer.data)
