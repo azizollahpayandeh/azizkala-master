@@ -8,3 +8,4 @@ class DashboardSerializer(serializers.ModelSerializer):
         model = Dashboard
         fields = ('user', 'first_name', 'last_name', 'address', 'state', 'city', 'postalcode')
         depth = 2
+
