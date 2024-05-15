@@ -6,4 +6,5 @@ class DashboardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Dashboard
-        fields = ('first_name', 'last_name', 'address', 'state', 'city', 'postalcode')
+        fields = ('user', 'first_name', 'last_name', 'address', 'state', 'city', 'postalcode')
+        depth = 2
