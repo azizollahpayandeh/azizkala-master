@@ -143,9 +143,9 @@ export default function Page() {
       if (response.status === 200) {
         setCookie('access', response.data.access);
         Swal.fire({
-          title: 'uccessfull!',
+          title: 'successfull!',
           text: 'you loged in successfully',
-          icon: 'uccess',
+          icon: 'success',
           confirmButtonText: 'ok'
         }).then((result) => {
           if (result.isConfirmed) {
@@ -163,20 +163,20 @@ export default function Page() {
     }
   };
 
-  // const fetchData = async () => {
-  //   try {
-  //     const response = await Axios.get('http://127.0.0.1:8000/api/dashboard/', {
-  //       headers: {
-  //         Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE1NzYwNjk3LCJpYXQiOjE3MTU2NzQyOTcsImp0aSI6IjZiNzczNGI2YzFiNTRlMGRhYTA3ZWM2ZGNkNzMyMGYyIiwidXNlcl9pZCI6MzR9.IoQLV5Bf3yKPjIGS3c2yNXzgLSZ5SAGGltJbGeKz-MA`,
-  //         "Content-Type": "application/json"
-  //       }
-  //     });
-  //     console.log(response.data);
+  const fetchData = async () => {
+    try {
+      const response = await Axios.get('http://127.0.0.1:8000/api/dashboard/', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      });
+      console.log(response.data);
       
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -224,7 +224,7 @@ export default function Page() {
                 </p>
               </Link>
             </div>
-            {/* <button onClick={fetchData}>Fetch Data</button> */}
+            <button onClick={fetchData}>Fetch Data</button>
           </div>
         </div>
       </div>

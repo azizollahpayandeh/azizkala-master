@@ -19,7 +19,7 @@ export default function page() {
                   </label>
                   <input
                     type="text"
-                    placeholder="Md"
+                    placeholder=""
                     id="Md"
                     className="bg-[#F7F7FC] pl-[7px] text-[14px] w-[100%] lg:w-[260px] xl:w-[325px] 2xl:w-[345px] h-[50px] rounded-md"
                   />
