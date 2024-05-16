@@ -9,7 +9,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     Custom user model.
     """
     phone_number = models.CharField(_('Phone Number'), max_length=11, unique=True)
-    username = models.CharField(_('User Name'), max_length=25, null=True, blank=True)
+    username = models.CharField(_('User Name'), max_length=25,unique=True)
     is_active = models.BooleanField(_('Is Active'), default=True)
     is_admin = models.BooleanField(_('Is Admin'), default=False)
     created_at = models.DateTimeField(_('Created At'), auto_now_add=True)
