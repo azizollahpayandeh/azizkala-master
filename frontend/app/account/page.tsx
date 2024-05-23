@@ -1,8 +1,17 @@
+"use client"
 import Button from "@/Components/Modules/Button/Button";
 import ButtonWithoutBg from "@/Components/Modules/ButtonWithoutBg/ButtonWithoutBg";
-import React from "react";
+import UseUserData from "@/hooks/user/user";
+import React, { useEffect } from 'react';
 
-export default function page() {
+export default function Page() {
+  const userDataa = UseUserData();
+  
+
+
+  console.log(userDataa);
+  
+  
   return (
     <>
       <div className="flex justify-center ">
@@ -19,7 +28,7 @@ export default function page() {
                   </label>
                   <input
                     type="text"
-                    placeholder=""
+                    placeholder={userDataa}
                     id="Md"
                     className="bg-[#F7F7FC] pl-[7px] text-[14px] w-[100%] lg:w-[260px] xl:w-[325px] 2xl:w-[345px] h-[50px] rounded-md"
                   />
