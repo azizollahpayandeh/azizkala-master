@@ -2,7 +2,7 @@
 import Button from "@/Components/Modules/Button/Button";
 import ButtonWithoutBg from "@/Components/Modules/ButtonWithoutBg/ButtonWithoutBg";
 import UseUserData from "@/hooks/user/user";
-import React, { useEffect } from 'react';
+import React from 'react';
 
 export default function Page() {
   const userDataa = UseUserData();
@@ -28,7 +28,7 @@ export default function Page() {
                   </label>
                   <input
                     type="text"
-                    placeholder={userDataa}
+                    placeholder={userDataa?.user?.username}
                     id="Md"
                     className="bg-[#F7F7FC] pl-[7px] text-[14px] w-[100%] lg:w-[260px] xl:w-[325px] 2xl:w-[345px] h-[50px] rounded-md"
                   />
