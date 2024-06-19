@@ -91,7 +91,7 @@
 > ---
 
 > ```
-> /auth/forgot_password/
+>  
 > ```
 >  - methods : `["POST", ]`
 >  - body(required) : `["phone_number", ]`
