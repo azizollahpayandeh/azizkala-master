@@ -1,5 +1,6 @@
 import Button from "@/Components/Modules/Button/Button";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 export default function page() {
@@ -104,7 +105,9 @@ export default function page() {
             </div>
 
             <div className="flex justify-center items-center">
-              <Button value="Procees to checkout" />
+              <Link href={'/checkout'}>
+                <Button value="Procees to checkout" />
+              </Link>
             </div>
           </div>
         </div>
