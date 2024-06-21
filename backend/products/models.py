@@ -85,7 +85,7 @@ class ProductVariation(models.Model):
     features = models.ManyToManyField(ProductFeature, verbose_name="Features")
     color = models.ManyToManyField(Color, verbose_name='Product Colors')
     images = models.ManyToManyField(Images, verbose_name='Product Images')
-    price = models.PositiveSmallIntegerField(_('Product Price'), )
+    price = models.PositiveIntegerField(_('Product Price'), )
     discount = models.PositiveSmallIntegerField(_('Product Discount'), default=0)
     quantity = models.PositiveSmallIntegerField(_('Product Quantity'), default=1)
     available = AvailableManager()
