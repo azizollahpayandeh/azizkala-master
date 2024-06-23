@@ -11,7 +11,7 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import Image from "next/image";
 
-export default function MainSec() {
+export default function   MainSec() {
   return (
     <>
       <div className="flex relative " id="MainSec">

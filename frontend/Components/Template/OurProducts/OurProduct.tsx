@@ -1,20 +1,31 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import TitleTemplate from "@/Components/Modules/titleTemplate/titleTemplate";
 import Button from "@/Components/Modules/Button/Button";
-
 import { Swiper, SwiperSlide } from "swiper/react";
-
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
-
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import Product from "@/Components/Modules/Product/product";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
+import { ProductType as ProductType } from "@/types";
 
 export default function OurProduct() {
+  const [products, setProducts] = useState<ProductType[]>([]);
+
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/api/products/")
+      .then(response => {
+        setProducts(response.data);
+      })
+      .catch(error => {
+        console.error("Error fetching products:", error);
+      });
+  }, []);
+
   return (
     <>
       <div className="pt-[100px]">
@@ -65,51 +76,26 @@ export default function OurProduct() {
               },
             }}
           >
-            <SwiperSlide className="grid grid-rows-4 row-span-4 ">
-              <div className="">
-                <Product />
-              </div>
-              <div className="pt-[50px]">
-                <Product />
-              </div>
-            </SwiperSlide>
-
-            <SwiperSlide className="grid grid-rows-4 row-span-4 ">
-              <div className="">
-                <Product />
-              </div>
-              <div className="pt-[50px]">
-                <Product />
-              </div>
-            </SwiperSlide>
-
-            <SwiperSlide className="grid grid-rows-4 row-span-4 ">
-              <div className="">
-                <Product />
-              </div>
-              <div className="pt-[50px]">
-                <Product />
-              </div>
-            </SwiperSlide>
-
-            <SwiperSlide className="grid grid-rows-4 row-span-4 ">
-              <div className="">
-                <Product />
-              </div>
-              <div className="pt-[50px]">
-                <Product />
-              </div>
-            </SwiperSlide>
-
-            <SwiperSlide className="grid grid-rows-4 row-span-4 ">
-              <div className="">
-                <Product />
-              </div>
-              <div className="pt-[50px]">
-                <Product />
-              </div>
-            </SwiperSlide>
-
+            {products.map((product) => (
+              <SwiperSlide key={product.id} className="grid grid-rows-4 row-span-4">
+                <div className="">
+                  <Product
+                    name={product.product_name}
+                    price={product.price}
+                    imageUrl={product.images[0]?.image}
+                    productId={product.id}
+                  />
+                </div>
+                <div className="pt-[50px]">
+                  <Product
+                    name={product.product_name}
+                    price={product.price}
+                    imageUrl={product.images[0]?.image}
+                    productId={product.id}
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
           </Swiper>
         </div>
 
