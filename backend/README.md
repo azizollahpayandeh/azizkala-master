@@ -1,168 +1,120 @@
-# hi, this is an API-Shop with django-rest-framework 3.15.1
+# Django-Rest-Framework Shop
 
-### for use this project :
+## For use this project :
 
-* install python
+ <br/>
 
-* in project root, create an virtual environment with cmd, then activate it :
+1. Make Sure You Have Installed Python
 
- ```
-  py -m venv venv
-  ```
+ <br/>
 
-* activate env :
+2. ```
+   cd yourproject
+   ```
 
+3. Create an virtual environment :
+   - In windows
+    ```
+    py -m venv venv
+    ```
+   - In linux
+    ```
+    python3 -m venv venv
+    ```
+    
 
-  - for windows
-  ```
-  venv\scripts\activate.bat
-  ```
+4. activate env :
+    - In windows
+    ```
+    venv\scripts\activate.bat
+    ```
+    - In linux
+    ```
+    source venv/bin/activate
+    ```
 
-  - for linux
-  ```
-  venv/bin/activate
-  ```
-
-* then run these commands :  
+5. Then run these commands :
   
-  - `pip install -r requirements.txt`
-
-  - `py manage.py makemigrations`
-
-  - `py manage.py migrate`
-
-  - `pu manage.py runserver`
-
-
-### for create a superuser(admin):
-`py manage.py createsuperuser`
-
-( then fill the inputs )
+    - `pip install -r requirements.txt`
+    - `py manage.py makemigrations`
+    - `py manage.py migrate`
+    - `py manage.py createsuperuser`
+    - `pu manage.py runserver`
 
 ---
 
-## Info
+# API Info
 > **Content-Type :** `application/json`
+> 
+> **Routes :** `GET /api/`
 > 
 > **Base Url :** `/api/...`
 
-## Routes
-### `GET /api/`
+<!-- ---------------------------------------------------------------------------------------- -->
+## Accounts :
+
+ ```
+ POST /auth/login/ 
+ ```
+>  - body (required) : `["phone_number", "password"]`
+>  - response : `a json includs "accsess" and "refresh" tokens for header`
 
 
-### Accounts :
-
-> ```
-> /auth/login/ 
-> ```
->    - methods : `["POST", ]`
->    - body (required) : `["phone_number", "password"]`
->    - response : `a json includs "accsess" and "refresh" tokens for header
->                              ( the header value should be like: "Bearer {access token}" for authenticate and have permission for requests )`
-
-> ---
-
->```
-> /auth/login/refresh/
->```
->  - methods : `["POST", ]`
+ ```
+ POST /auth/login/refresh/
+ ```
 >  - body(required) : `["refresh", ]`
 >  - response : `refresh token`
 
-> ---
 
-> ```
-> /auth/logout/
-> ```
->  - methods : `["POST", ]`
->  - body : `["", ]`
+ ```
+ POST /auth/logout/
+ ```
 >  - header : `Bearer {token}`
 >  - response : `"confirm message"`
 
-> ---
 
-> ```
-> /auth/register/
-> ```
->  - methods : `["POST", ]`
+ ```
+ POST /auth/register/
+ ```
 >  - body (required) : `["phone_number", "password"]`
 >  - response : `"confirm message"`
 
-> ---
 
-> ```
-> /auth/forgot_password/
-> ```
->  - methods : `["POST", ]`
+ ```
+ POST /auth/forgot_password/
+ ```
 >  - body(required) : `["phone_number", ]`
 >  - response : `"confirm message"`
 
-> ---
 
-> ```
-> /auth/confirm/
-> ```
->  - methods : `["PUT", ]`
->  - body : `["", ]`
->  - session : `["otp", "user"]`    *otp is a 4 digits one-time-password that sends by email or sms
+ ```
+ PUT /auth/confirm/
+ ```
 >  - response : `"a confirm message for send otp"`
   
-> ---
 
-> ```
-> /auth/change_password/:user_id/
-> ```
->  - methods : `["PUT", ]`
+ ```
+ PUT /auth/change_password/:user_id/
+ ```
 >  - body : `["old_password", "password1", "password2"]`
 >  - response : `"a success message for change password"`
 
 ---
 ---
 
-### Products :
+<!-- ---------------------------------------------------------------------------------------- -->
+## Products :
 
-> ```
-> /products/
-> ```
->  - methods : `["GET", ]`
->  - body : `["", ]`
->  - response : `a list of product variations :`
-
-
-    products_variations [ 
-      id,
-      product_name, 
-      product_model, 
-      short_description, 
-      features [key, value], 
-      color [name, code],
-      images,
-      price, 
-      discount(%), 
-      price_with_discount, 
-      quantity, 
-      is_available, 
-      created_at, 
-      product[ 
-        id,
-        name,
-        complete_descriptions,
-        is_available,
-        created_at,
-        brand [title, image],
-        image [image, ],
-        category [title, image],
-        ]]
+ ```
+ GET /products/
+ ```
+>  - response : `a list of product variations`
 
 
-> ---
-
-> ```
-> /product-detail/{product_id}/
-> ```
-
-> - methods : `["GET", ]`
-> - body : `["", ]`
+ ```
+ GET /product-detail/:product_id/
+ ```
 > - response : `a single product variation for details :`
 
 ```
@@ -195,66 +147,31 @@ products_variations [
 ---
 ---
 
-### Category
+<!-- ---------------------------------------------------------------------------------------- -->
+## Category :
 
-> ```
-> /category/
-> ```
-
->  - methods : `["GET", ]`
->  - body : `["", ]`
->  - response : `a list of category with fields ["id", "title", "image"]`
+ ```
+ GET /category/
+ ```
+>  - response : `a list of category`
 
 ---
 ---
-### Carts
 
-> ```
-> /cart/
-> ```
+<!-- ---------------------------------------------------------------------------------------- -->
+## Carts :
 
-> -  methods : `["GET", ]`
-> -  body : `["", ]`
+ ```
+ GET /cart/
+ ```
 > -  response : `a list of carts :`
 
-```
-    product_id,
-    color,
-    quantity,
-    product [ 
-      id,
-      product_name, 
-      product_model, 
-      short_description, 
-      features [key, value], 
-      color [name, code],
-      images,
-      price, 
-      discount(%), 
-      price_with_discount, 
-      quantity, 
-      is_available, 
-      created_at, 
-      product [
-        id,
-        name,
-        complete_descriptions,
-        is_available,
-        created_at,
-        brand [title, image],
-        image [image, ],
-        category [title, image],
-        ]]
-      
-```
-
----
-
-> ```
-> /cart/add-or-remove/
-> ```
-
->  - methods : `["POST", "DELETE"]`
+ ```
+ POST /cart/add-or-remove/
+ ```
+ ```
+ DELETE /cart/add-or-remove/
+ ```
 >  - body for POST : `["product_id", "quantity", "color"]`
 >  - body for DELETE : `["product_id", "color", ]`
 >  - response : `a confirm message for DELETE or POST`
@@ -262,28 +179,37 @@ products_variations [
 ---
 ---
 
-### Dashboard :
+<!-- ---------------------------------------------------------------------------------------- -->
+## Dashboard :
 
-> ```
-> /dashboard/
-> ```
-
->  - methods : `["GET", "POST", "PUT"]`
+ ```
+ GET /dashboard/
+ ```
+ ```
+ POST /dashboard/
+ ```
+ ```
+ PUT /dashboard/
+ ```
 >  - body for POST : `["first_name", "last_name", "address", "state", "postalcode"]  `
->  - body for PUT : `optional`
 >  - response : `a success message for POST or PUT`
 
 ---
 ---
 
-### orders :
+<!-- ---------------------------------------------------------------------------------------- -->
+## Orders :
 
-> ```
-> /orders/
-> ```
-
->  - methods : `["GET", "POST", "DELETE"]`
->  - body for POST : `["", ]` *carts will be add to order automaticly
+ ```
+ GET /orders/
+ ```
+ ```
+ POST /orders/
+ ```
+>  *carts will be add to order automaticly
+ ```
+ DELETE /orders/
+ ```
 >  - body for DELETE : `["code", ]`
 >  - response : `a success message for POST or canceled message for DELETE`
 
