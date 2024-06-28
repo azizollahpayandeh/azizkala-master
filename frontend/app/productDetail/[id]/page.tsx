@@ -1,33 +1,42 @@
 "use client";
 import Button from "@/Components/Modules/Button/Button";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TbTruckDelivery } from "react-icons/tb";
 import { GiReturnArrow } from "react-icons/gi";
 import { CiHeart } from "react-icons/ci";
-// import { Swiper, SwiperSlide } from "swiper/react";
+import axios from "axios";
+import { usePathname } from "next/navigation";
 
-// import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 
-// import "swiper/css";
-// import "swiper/css/navigation";
-// import "swiper/css/pagination";
-// import "swiper/css/scrollbar";
-
-export default function page() {
+export default function Page() {
   const [count, setCount] = useState(0);
+  const [productData, setProductData] = useState(null);
+  console.log(productData);
+  
+  const [error, setError] = useState(null);
 
   const minusCount = () => {
-    if (count == 0) {
-      setCount((prevCount) => prevCount);
-    } else {
-      setCount((prevCount) => prevCount - 1);
-    }
+    setCount((prevCount) => (prevCount > 0 ? prevCount - 1 : prevCount));
   };
 
   const plusCount = () => {
     setCount((prevCount) => prevCount + 1);
   };
+
+  const id = usePathname();
+  const idNumber = id.split('/').pop();
+
+  useEffect(() => {
+    axios.get(`http://127.0.0.1:8000/api/product-detail/${idNumber}/`)
+      .then(response => {
+        setProductData(response.data);
+      })
+      .catch(error => {
+        setError('There was an error making the GET request:', error);
+      });
+  }, [idNumber]);
+
   return (
     <>
       <div className="flex  flex-col ">
@@ -78,7 +87,7 @@ export default function page() {
           </div>
 
           <div className="details w-[350px] md:w-[450px] flex flex-col justify-center lg:justify-start gap-2">
-            <h1 className="text-[24px]">Havic HV G-92 Gamepad</h1>
+            <h1 className="text-[24px]">{productData?.product_name}</h1>
             <div className="flex gap-2 items-center">
               <Image
                 src="/assets/Four Star.png"
@@ -90,11 +99,9 @@ export default function page() {
               <p>|</p>
               <p className="text-[14px] text-[#00FF66] opacity-70">In Stock</p>
             </div>
-            <p className="text-[24px]">$192.00</p>
+            <p className="text-[24px]">${productData?.price}</p>
             <p className="text-[14px] opacity-80 pt-[10px] pb-[15px]">
-              PlayStation 5 Controller Skin High quality vinyl with air channel
-              adhesive for easy bubble free install & mess free removal Pressure
-              sensitive.
+             {productData?.short_description}
             </p>
             <hr className="pt-[15px]" />
             <div className="flex gap-2 items-center">

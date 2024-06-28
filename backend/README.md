@@ -23,7 +23,7 @@
   venv/bin/activate
   ```
 
-* then run these commands :
+* then run these commands :  
   
   - `pip install -r requirements.txt`
 
