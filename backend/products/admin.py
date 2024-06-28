@@ -59,7 +59,7 @@ class ProductVariationAdmin(admin.ModelAdmin):
     # inlines = (ProductFeatureInline, )            #<-------------------------------
 
     fieldsets = (
-        (None, {'fields': ('product', 'product_model', 'short_description', 'features', 'color', 'images',)}),
+        (None, {'fields': ('product', 'product_model', 'rate', 'features', 'color', 'images',)}),
         (None, {'fields': ('price', 'discount', 'quantity')}),
     )
 

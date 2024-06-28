@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext as _
 from django.utils.safestring import mark_safe
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Base(models.Model):
@@ -81,7 +82,7 @@ class ProductFeature(models.Model):
 class ProductVariation(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     product_model = models.CharField(_('Product Model'), max_length=30, null=True, blank=True)
-    short_description = models.CharField(_('Short Description (50 word)'), max_length=50)
+    rate = models.DecimalField(validators=[MinValueValidator(0.0), MaxValueValidator(5.0)], default=0, decimal_places=1, max_digits=2)
     features = models.ManyToManyField(ProductFeature, verbose_name="Features")
     color = models.ManyToManyField(Color, verbose_name='Product Colors')
     images = models.ManyToManyField(Images, verbose_name='Product Images')

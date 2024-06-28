@@ -31,7 +31,7 @@
 
   - `py manage.py migrate`
 
-  - `py manage.py runserver`
+  - `pu manage.py runserver`
 
 
 ### for create a superuser(admin):
