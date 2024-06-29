@@ -39,7 +39,7 @@
     - `py manage.py makemigrations`
     - `py manage.py migrate`
     - `py manage.py createsuperuser`
-    - `pu manage.py runserver`
+    - `py manage.py runserver`
 
 ---
 

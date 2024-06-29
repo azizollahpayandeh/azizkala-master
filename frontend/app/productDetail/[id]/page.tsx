@@ -8,13 +8,26 @@ import { CiHeart } from "react-icons/ci";
 import axios from "axios";
 import { usePathname } from "next/navigation";
 
-
 export default function Page() {
+  const [productSize, setProductSize] = useState("");
   const [count, setCount] = useState(0);
   const [productData, setProductData] = useState(null);
-  console.log(productData);
-  
   const [error, setError] = useState(null);
+
+  const id = usePathname();
+  const idNumber = id.split("/").pop();
+
+  useEffect(() => {
+    axios
+      .get(`http://127.0.0.1:8000/api/product-detail/${idNumber}/`)
+      .then((response) => {
+        setProductData(response.data);
+      })
+      .catch((error) => {
+        setError("There was an error making the GET request");
+        console.error(error);
+      });
+  }, [idNumber]);
 
   const minusCount = () => {
     setCount((prevCount) => (prevCount > 0 ? prevCount - 1 : prevCount));
@@ -24,54 +37,25 @@ export default function Page() {
     setCount((prevCount) => prevCount + 1);
   };
 
-  const id = usePathname();
-  const idNumber = id.split('/').pop();
-
-  useEffect(() => {
-    axios.get(`http://127.0.0.1:8000/api/product-detail/${idNumber}/`)
-      .then(response => {
-        setProductData(response.data);
-      })
-      .catch(error => {
-        setError('There was an error making the GET request:', error);
-      });
-  }, [idNumber]);
+  const sizeOptions = ["XS", "S", "M", "L", "XL"];
 
   return (
     <>
-      <div className="flex  flex-col ">
-        <div className="all flex flex-col justify-center lg:flex-row  md:justify-between 2xl:justify-evenly mt-[100px]">
+      <div className="flex flex-col">
+        <div className="all flex flex-col justify-center lg:flex-row md:justify-between 2xl:justify-evenly mt-[100px]">
           <div className="flex flex-col">
             <div className="flex flex-col lg:flex-row lg:gap-10 w-full lg:w-95%">
               <div className="hidden lg:flex lg:flex-col lg:gap-4">
-                <Image
-                  src="/assets/Frame 895.png"
-                  alt="productImages"
-                  width={170}
-                  height={138}
-                  className="cursor-pointer"
-                />
-                <Image
-                  src="/assets/Frame 895.png"
-                  alt="productImages"
-                  width={170}
-                  height={138}
-                  className="cursor-pointer"
-                />
-                <Image
-                  src="/assets/Frame 895.png"
-                  alt="productImages"
-                  width={170}
-                  height={138}
-                  className="cursor-pointer"
-                />
-                <Image
-                  src="/assets/Frame 895.png"
-                  alt="productImages"
-                  width={170}
-                  height={138}
-                  className="cursor-pointer"
-                />
+                {Array(4).fill(null).map((_, index) => (
+                  <Image
+                    key={index}
+                    src="/assets/Frame 895.png"
+                    alt="productImages"
+                    width={170}
+                    height={138}
+                    className="cursor-pointer"
+                  />
+                ))}
               </div>
               <div className="hidden lg:block">
                 <Image
@@ -79,11 +63,10 @@ export default function Page() {
                   alt="productImages"
                   width={1000}
                   height={600}
-                  className="h-full w-[95%] "
+                  className="h-full w-[95%]"
                 />
               </div>
             </div>
-
           </div>
 
           <div className="details w-[350px] md:w-[450px] flex flex-col justify-center lg:justify-start gap-2">
@@ -101,11 +84,11 @@ export default function Page() {
             </div>
             <p className="text-[24px]">${productData?.price}</p>
             <p className="text-[14px] opacity-80 pt-[10px] pb-[15px]">
-             {productData?.short_description}
+              {productData?.short_description}
             </p>
             <hr className="pt-[15px]" />
             <div className="flex gap-2 items-center">
-              <p className="text-[20px] pr-[10px]">colors:</p>
+              <p className="text-[20px] pr-[10px]">Colors:</p>
               <Image
                 src="/assets/Ellipse 8.png"
                 width={14}
@@ -121,34 +104,28 @@ export default function Page() {
                 className="cursor-pointer"
               />
             </div>
-            <div className="flex gap-3 pt-[10px]">
-              <p className="text-[20px] pr-[10px]">Size:</p>
-              <div className="w-[32px] h-[32px] border flex justify-center items-center hover:bg-red hover:text-white hover:border-none rounded-sm ">
-                <p className="text-[14px] opacity-90 cursor-pointer">XS</p>
-              </div>
-              <div className="w-[32px] h-[32px] border flex justify-center items-center hover:bg-red hover:text-white hover:border-none rounded-sm ">
-                <p className="text-[14px] opacity-90 cursor-pointer">S</p>
-              </div>
-              <div className="w-[32px] h-[32px] border flex justify-center items-center hover:bg-red hover:text-white hover:border-none rounded-sm ">
-                <p className="text-[14px] opacity-90 cursor-pointer">M</p>
-              </div>
-              <div className="w-[32px] h-[32px] border flex justify-center items-center hover:bg-red hover:text-white hover:border-none rounded-sm ">
-                <p className="text-[14px] opacity-90 cursor-pointer">L</p>
-              </div>
-              <div className="w-[32px] h-[32px] border flex justify-center items-center hover:bg-red hover:text-white hover:border-none rounded-sm ">
-                <p className="text-[14px] opacity-90 cursor-pointer">XL</p>
-              </div>
+            <div className="flex gap-3 pt-[10px] ">
+              <p className="text-[20px] pr-[10px] ">Size:</p>
+              {sizeOptions.map((size) => (
+                <div
+                  key={size}
+                  className={`w-[32px] cursor-pointer h-[32px] border flex justify-center items-center hover:bg-red hover:text-white hover:border-none rounded-sm ${productSize === size ? "bg-red text-white border-none" : ""}`}
+                  onClick={() => setProductSize(size)}
+                >
+                  <p className="text-[14px] opacity-90 ">{size}</p>
+                </div>
+              ))}
             </div>
 
             <div className="flex justify-between pt-[20px]">
-              <div className="md:w-[160px] w-[140px]  border flex">
+              <div className="md:w-[160px] w-[140px] border flex">
                 <div
                   className="border-r w-[40px] flex justify-center items-center hover:bg-red hover:text-white cursor-pointer"
                   onClick={minusCount}
                 >
                   <p className="pb-[10px]">_</p>
                 </div>
-                <div className="w-[80px] flex justify-center items-center ">
+                <div className="w-[80px] flex justify-center items-center">
                   {count}
                 </div>
                 <div
@@ -162,14 +139,14 @@ export default function Page() {
                 <Button value="Buy Now" />
               </div>
               <div>
-                <div className="w-[40px] h-full border flex justify-center items-center cursor-pointer  rounded-sm">
+                <div className="w-[40px] h-full border flex justify-center items-center cursor-pointer rounded-sm">
                   <CiHeart className="w-[20px] h-[20px]" />
                 </div>
               </div>
             </div>
 
             <div className="border w-full h-[180px] mt-[20px]">
-              <div className="border-b flex gap-3 items-center  p-[20px]">
+              <div className="border-b flex gap-3 items-center p-[20px]">
                 <TbTruckDelivery className="w-[30px] h-[30px]" />
                 <div>
                   <p>Free Delivery</p>
@@ -178,19 +155,18 @@ export default function Page() {
                   </p>
                 </div>
               </div>
-              <div className="flex gap-3 items-center  p-[20px]">
+              <div className="flex gap-3 items-center p-[20px]">
                 <GiReturnArrow className="w-[30px] h-[30px]" />
                 <div>
                   <p>Return Delivery</p>
-                  <p className="text-[12px]">
-                    Free 30 Days Delivery Returns. Details
-                  </p>
+                  <p className="text-[12px]">Free 30 Days Delivery Returns. Details</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      {error && <p className="text-red-500">{error}</p>}
     </>
   );
 }
