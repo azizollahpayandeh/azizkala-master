@@ -38,6 +38,24 @@ class Brand(Base):
     pass
 
 
+class Size(models.Model):
+    SIZE_CHOICES = (
+        ('XS', 'XS'),
+        ('S', 'S'),
+        ('M', 'M'),
+        ('L', 'L'),
+        ('XL', 'XL'),
+        ('XXL', 'XXL'),
+        ('XXXL', 'XXXL'),
+    )
+
+    size = models.CharField(choices=SIZE_CHOICES, max_length=5)
+    quantity = models.PositiveSmallIntegerField()
+
+    def __str__(self):
+        return self.size
+
+
 class Color(models.Model):
     name = models.CharField(max_length=25, verbose_name='Color Name')
     code = models.CharField(max_length=10, default='#FF0000', null=True, blank=True)
@@ -55,9 +73,9 @@ class Color(models.Model):
 class Product(models.Model):
     name = models.CharField(_('Product Name'), max_length=100)
     complete_descriptions = models.TextField(_('Product Descriptions'), max_length=256)
-    category = models.ManyToManyField(Category, verbose_name='Product Category')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Product Category')
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, verbose_name='Product Brand')
-    image = models.ForeignKey(Images, on_delete=models.CASCADE, verbose_name='Product Image')
+    cover_image = models.ForeignKey(Images, on_delete=models.CASCADE, verbose_name='Cover Image')
     is_available = models.BooleanField(default=True)
     created_at = models.DateTimeField(_('Created At'), auto_now_add=True)
 
@@ -85,6 +103,7 @@ class ProductVariation(models.Model):
     rate = models.DecimalField(validators=[MinValueValidator(0.0), MaxValueValidator(5.0)], default=0, decimal_places=1, max_digits=2)
     features = models.ManyToManyField(ProductFeature, verbose_name="Features")
     color = models.ManyToManyField(Color, verbose_name='Product Colors')
+    size = models.ManyToManyField(Size)
     images = models.ManyToManyField(Images, verbose_name='Product Images')
     price = models.PositiveIntegerField(_('Product Price'), )
     discount = models.PositiveSmallIntegerField(_('Product Discount'), default=0)

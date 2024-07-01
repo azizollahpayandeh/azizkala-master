@@ -12,3 +12,13 @@ class Cart(models.Model):
 
     def __str__(self):
         return f'{self.user.phone_number} : {self.product.product}'
+
+    # @property
+    # def calculate_total_price_with_coupon(self):
+    #     product_price = int(self.product.price)
+    #
+    #     if coupon := self.coupon:
+    #         return int(product_price * (1 - coupon.discount_percent / 100))
+    #
+    #     return product_price
+

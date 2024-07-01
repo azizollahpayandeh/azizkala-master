@@ -16,26 +16,26 @@ def mark_as_not_available(self, request, queryset, des):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'get_category', 'brand', 'image_tag', 'created_at')
+    list_display = ('name', 'brand', 'image_tag', 'created_at')
     search_fields = ('name', 'category', 'brand')
     list_filter = ('category', 'brand', 'created_at')
     actions = (mark_as_is_available, mark_as_not_available)
 
     fieldsets = (
         (None, {'fields': ('name', 'category', 'brand',)}),
-        (None, {'fields': ('image', 'complete_descriptions')}),
+        (None, {'fields': ('cover_image', 'complete_descriptions')}),
         (None, {'fields': ('is_available', )}),
     )
 
     def image_tag(self, obj):
-        if obj.image:
+        if obj.cover_image:
             return format_html(
-                '<img src="{}"style="width:45px;height:45px;"/>', obj.image.image.url
+                '<img src="{}"style="width:45px;height:45px;"/>', obj.cover_image.image.url
             )
         return "-"
 
-    def get_category(self, obj):
-        return "\n".join([c.title for c in obj.category.all()])
+    # def get_category(self, obj):
+    #     return "\n".join([c.title for c in obj.category.all()])
 
     # image_tag.short_description = _('Image')
 
@@ -60,7 +60,7 @@ class ProductVariationAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {'fields': ('product', 'product_model', 'rate', 'features', 'color', 'images',)}),
-        (None, {'fields': ('price', 'discount', 'quantity')}),
+        (None, {'fields': ('price', 'discount', 'quantity', 'size')}),
     )
 
     def image_tag(self, obj):
@@ -76,6 +76,7 @@ class ProductVariationAdmin(admin.ModelAdmin):
 # admin.site.register(Brand)
 admin.site.register(ProductFeature)
 admin.site.register(Color)
+admin.site.register(Size)
 
 
 @admin.register(Images, Category, Brand)

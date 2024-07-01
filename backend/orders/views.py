@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from cart.models import Cart
 from products.models import ProductVariation
-from .models import Order
+from .models import Order, Coupon
 from .serializers import OrderSerializer
 from dashboard.models import Dashboard
 
@@ -69,11 +69,19 @@ class OrderView(APIView):
                 order = Order.objects.create(dashboard=dashboard,
                                              admin_note=admin_note[:-2],
                                              total=total)
+
+                if coupon_code := serializer.data['coupon_code']:
+                    coupon = get_object_or_404(Coupon, code__exact=coupon_code)
+                    if coupon:
+                        order.coupons.add(coupon)
+
                 order.products.add(*products)
                 order.save()
+
                 return Response(
                     status=status.HTTP_200_OK,
                     data={'detail': 'order created'})
+
             return Response(
                 status=status.HTTP_200_OK,
                 data={'detail': 'there is no product to be order'})
