@@ -13,7 +13,7 @@ export default function Page() {
   const [count, setCount] = useState(0);
   const [productData, setProductData] = useState(null);
   const [error, setError] = useState(null);
-  console.log(productData);
+
 
 
   const id = usePathname();
@@ -61,7 +61,7 @@ export default function Page() {
               </div>
               <div className="hidden lg:block">
                 <Image
-                  src="/assets/Frame 894.png"
+                  src={productData?.images[2]?.image}
                   alt="productImages"
                   width={1000}
                   height={600}

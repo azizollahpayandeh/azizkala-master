@@ -16,6 +16,8 @@ import { ProductType as ProductType } from "@/types";
 
 export default function Today() {
   const [products, setProducts] = useState<ProductType[]>([]);
+  console.log(products);
+  
 
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/api/products/")
