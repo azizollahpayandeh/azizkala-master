@@ -13,6 +13,8 @@ export default function Page() {
   const [count, setCount] = useState(0);
   const [productData, setProductData] = useState(null);
   const [error, setError] = useState(null);
+  console.log(productData);
+
 
   const id = usePathname();
   const idNumber = id.split("/").pop();
@@ -46,10 +48,10 @@ export default function Page() {
           <div className="flex flex-col">
             <div className="flex flex-col lg:flex-row lg:gap-10 w-full lg:w-95%">
               <div className="hidden lg:flex lg:flex-col lg:gap-4">
-                {Array(4).fill(null).map((_, index) => (
+                {productData?.images?.slice(0, 4).map((image, index) => (
                   <Image
                     key={index}
-                    src="/assets/Frame 895.png"
+                    src={image}
                     alt="productImages"
                     width={170}
                     height={138}
