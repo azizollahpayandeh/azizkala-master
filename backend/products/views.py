@@ -24,11 +24,6 @@ class ProductView(generics.ListAPIView):
     # pagination_class =
 
 
-class ProductDetailView(APIView):
-    def get (self, request, id, format=None):
-        queryset = get_object_or_404(ProductVariation, id=id)
-        serializer = ProductVariationSerializer(queryset)
-
-        return Response(
-            status=status.HTTP_200_OK,
-            data=serializer.data)
+class ProductDetailView(generics.RetrieveAPIView):
+    queryset = ProductVariation.available.all()
+    serializer_class = ProductVariationSerializer
