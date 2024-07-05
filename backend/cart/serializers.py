@@ -7,5 +7,5 @@ class CartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = ('color', 'quantity', 'product', 'product_id', 'coupon')
+        fields = ('color', 'quantity', 'product', 'product_id')
         depth = 3

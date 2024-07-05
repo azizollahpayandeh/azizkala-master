@@ -125,6 +125,7 @@ products_variations [
       short_description, 
       features [key, value], 
       color [name, code],
+      size,
       images,
       price, 
       discount(%), 
@@ -139,7 +140,7 @@ products_variations [
         is_available,
         created_at,
         brand [title, image],
-        image [image, ],
+        cover_image [image, ],
         category [title, image],
         ]]
 ```
@@ -207,6 +208,7 @@ products_variations [
  POST /orders/
  ```
 >  *carts will be add to order automaticly
+>  - body for POST *optional : `["coupon_code", ]`
  ```
  DELETE /orders/
  ```
