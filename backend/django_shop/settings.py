@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'cart.apps.CartConfig',
     'orders.apps.OrdersConfig',
     'dashboard.apps.DashboardConfig',
+    'ticket',
 
     'rest_framework',
     'rest_framework_simplejwt',
@@ -145,8 +146,6 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
-
-
 }
 
 SIMPLE_JWT = {
