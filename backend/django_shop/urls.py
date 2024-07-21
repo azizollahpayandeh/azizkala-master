@@ -43,7 +43,8 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     # path('api/swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    path('api/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('api/', schema_view.with_ui('swagger',
+         cache_timeout=0), name='schema-swagger-ui'),
     # path('api/redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
     path('admin/', admin.site.urls),
@@ -52,7 +53,10 @@ urlpatterns = [
     path('api/cart/', include('cart.urls')),
     path('api/orders/', include('orders.urls')),
     path('api/dashboard/', include('dashboard.urls')),
+    path('api/ticket/', include('ticket.urls')),
+
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

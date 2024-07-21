@@ -51,15 +51,36 @@ class ProductAdmin(admin.ModelAdmin):
     # extra = 1
 
 
+# @admin.register(ProductVariation)
+# class ProductVariationAdmin(admin.ModelAdmin):
+#     list_display = ('product_name', 'price', 'discount', 'price_with_discount', 'is_available', 'quantity', 'image_tag', 'created_at')
+#     search_fields = ('product__name', 'product__category', 'product__brand')
+#     list_filter = ('product__category', 'product__brand', 'created_at')    #<------------------------------- caustom_filter by quantity
+#     # inlines = (ProductFeatureInline, )            #<-------------------------------
+
+#     fieldsets = (
+#         (None, {'fields': ('product', 'product_model', 'rate', 'features', 'color', 'images',)}),
+#         (None, {'fields': ('price', 'discount', 'quantity', 'size')}),
+#     )
+
+#     def image_tag(self, obj):
+#         if _obj := obj.images.first():
+#             return format_html(
+#                 '<img src="{}"style="width:45px;height:45px;"/>', _obj.image.url
+#             )
+#         return "-"
+
+
 @admin.register(ProductVariation)
 class ProductVariationAdmin(admin.ModelAdmin):
-    list_display = ('product_name', 'price', 'discount', 'price_with_discount', 'is_available', 'quantity', 'image_tag', 'created_at')
+    list_display = ('product_name', 'price', 'discount', 'price_with_discount',
+                    'is_available', 'quantity', 'image_tag', 'created_at')
     search_fields = ('product__name', 'product__category', 'product__brand')
-    list_filter = ('product__category', 'product__brand', 'created_at')    #<------------------------------- caustom_filter by quantity
-    # inlines = (ProductFeatureInline, )            #<-------------------------------
+    list_filter = ('product__category', 'product__brand', 'created_at')
 
     fieldsets = (
-        (None, {'fields': ('product', 'product_model', 'rate', 'features', 'color', 'images',)}),
+        (None, {'fields': ('product', 'product_model',
+         'rate', 'features', 'color', 'images')}),
         (None, {'fields': ('price', 'discount', 'quantity', 'size')}),
     )
 
@@ -69,6 +90,13 @@ class ProductVariationAdmin(admin.ModelAdmin):
                 '<img src="{}"style="width:45px;height:45px;"/>', _obj.image.url
             )
         return "-"
+
+    def product_name(self, obj):
+        return obj.product_name()
+
+    def price_with_discount(self, obj):
+        return obj.price_with_discount
+    price_with_discount.short_description = 'Price with Discount'
 
 
 # admin.site.register(Images)

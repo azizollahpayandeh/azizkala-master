@@ -4,83 +4,67 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from products.models import ProductVariation
 from .models import Cart
-from .serializers import CartSerializer
+from .serializers import CartSerializer, CartItemSerializer
 
 
 class CartView(APIView):
     permission_classes = (permissions.IsAuthenticated, )
 
     def get(self, request, format=None):
-        queryset = Cart.objects.filter(user=request.user)
-        serializer = CartSerializer(queryset, many=True)
-
-        return Response(
-            status=status.HTTP_200_OK,
-            data=serializer.data)
+        cart = Cart.objects.get(user=request.user)
+        serializer = CartSerializer(cart)
+        return Response(serializer.data)
 
 
 class CartEditView(APIView):
     permission_classes = (permissions.IsAuthenticated, )
 
     def post(self, request, format=None):
-        serializer = CartSerializer(data=request.data)
-
-        if not 'quantity' in request.data:
-            return Response(
-                status=status.HTTP_400_BAD_REQUEST,
-                data={"detail": "quantity is required !"})
+        data = request.data.copy()
+        data['user'] = request.user.id
+        serializer = CartItemSerializer(data=data)
 
         if serializer.is_valid():
+            product = serializer.validated_data['product']
             quantity = serializer.validated_data['quantity']
-            color = serializer.validated_data['color']
-            product_id = serializer.validated_data['product_id']
-            product = get_object_or_404(ProductVariation, id=product_id)
-            user = self.request.user
 
-            if not product or not product.is_available:
+            if not product.is_available:
                 return Response(
                     status=status.HTTP_404_NOT_FOUND,
                     data={"detail": "this item is not available try another one !"})
 
-            if cart := Cart.objects.get_or_create(user=user,
-                                                  product=product,
-                                                  color=color):
-                cart[0].quantity += quantity
-                cart[0].save()
+            cart, _ = Cart.objects.get_or_create(user=request.user)
+            cart_item, created = CartItem.objects.get_or_create(
+                cart=cart, product=product,
+                defaults={'quantity': quantity}
+            )
 
-                return Response(
-                    status=status.HTTP_200_OK,
-                    data={"detail": f'{quantity} quantity of product {product} added to your cart '})
-            else:
-                return Response(
-                    status=status.HTTP_200_OK,
-                    data={"detail": 'one object added'})
+            if not created:
+                cart_item.quantity += quantity
+                cart_item.save()
+
+            return Response(
+                status=status.HTTP_200_OK,
+                data={"detail": f'{quantity} quantity of product {product} added to your cart '})
 
         return Response(
-            status=status.HTTP_200_OK,
+            status=status.HTTP_400_BAD_REQUEST,
             data=serializer.errors)
 
     def delete(self, request, format=None):
-        serializer = CartSerializer(data=request.data)
+        data = request.data.copy()
+        serializer = CartItemSerializer(data=data)
 
         if serializer.is_valid():
-            product_id = serializer.validated_data['product_id']
-            color = serializer.validated_data['color']
-            product = get_object_or_404(ProductVariation, id=product_id)
-            user = self.request.user
-
-            if not product or not product.is_available:
-                return Response(
-                    status=status.HTTP_404_NOT_FOUND,
-                    data={"detail": "this item is not available try another one !"})
-
-            if cart := get_object_or_404(Cart, user=user, product=product, color=color):
-                cart.delete()
+            product = serializer.validated_data['product']
+            cart = Cart.objects.get(user=request.user)
+            cart_item = get_object_or_404(CartItem, cart=cart, product=product)
+            cart_item.delete()
 
             return Response(
                 status=status.HTTP_200_OK,
                 data={"detail": 'one object removed', "code": "done"})
 
         return Response(
-            status=status.HTTP_200_OK,
+            status=status.HTTP_400_BAD_REQUEST,
             data=serializer.errors)

@@ -6,7 +6,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 class Base(models.Model):
     title = models.CharField(_('Title'), max_length=20, unique=True)
-    image = models.ImageField(_('Image'), upload_to='other_images/', null=True, blank=True)
+    image = models.ImageField(
+        _('Image'), upload_to='other_images/', null=True, blank=True)
     created_at = models.DateTimeField(_('Created At'), auto_now_add=True)
 
     class Meta:
@@ -58,7 +59,8 @@ class Size(models.Model):
 
 class Color(models.Model):
     name = models.CharField(max_length=25, verbose_name='Color Name')
-    code = models.CharField(max_length=10, default='#FF0000', null=True, blank=True)
+    code = models.CharField(
+        max_length=10, default='#FF0000', null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -72,10 +74,14 @@ class Color(models.Model):
 
 class Product(models.Model):
     name = models.CharField(_('Product Name'), max_length=100)
-    complete_descriptions = models.TextField(_('Product Descriptions'), max_length=256)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, verbose_name='Product Category', null=True, blank=True)
-    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, verbose_name='Product Brand', null=True, blank=True)
-    cover_image = models.ForeignKey(Images, on_delete=models.SET_NULL, verbose_name='Cover Image', null=True, blank=True)
+    complete_descriptions = models.TextField(
+        _('Product Descriptions'), max_length=256)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL,
+                                 verbose_name='Product Category', null=True, blank=True)
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE,
+                              verbose_name='Product Brand', null=True, blank=True)
+    cover_image = models.ForeignKey(
+        Images, on_delete=models.SET_NULL, verbose_name='Cover Image', null=True, blank=True)
     is_available = models.BooleanField(default=True)
     created_at = models.DateTimeField(_('Created At'), auto_now_add=True)
 
@@ -90,7 +96,8 @@ class AvailableManager(models.Manager):
 
 class ProductFeature(models.Model):
     key = models.CharField(_('Subject'), max_length=30, default='Display Size')
-    value = models.CharField(_('Subject Value'), max_length=30, default='6 inch')
+    value = models.CharField(
+        _('Subject Value'), max_length=30, default='6 inch')
     # extra_cost = models.PositiveSmallIntegerField(_('Extra Cost For This Option'), null=True, blank=True, default=0)
 
     def __str__(self):
@@ -99,15 +106,23 @@ class ProductFeature(models.Model):
 
 class ProductVariation(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    product_model = models.CharField(_('Product Model'), max_length=30, null=True, blank=True)
-    rate = models.DecimalField(validators=[MinValueValidator(0.0), MaxValueValidator(5.0)], default=0, decimal_places=1, max_digits=2)
-    features = models.ManyToManyField(ProductFeature, verbose_name="Features", blank=True)
-    color = models.ManyToManyField(Color, verbose_name='Product Colors', blank=True)
-    size = models.ManyToManyField(Size, verbose_name='Product_sizes', blank=True)
-    images = models.ManyToManyField(Images, verbose_name='Product Images', null=True, blank=True)
+    product_model = models.CharField(
+        _('Product Model'), max_length=30, null=True, blank=True)
+    rate = models.DecimalField(validators=[MinValueValidator(
+        0.0), MaxValueValidator(5.0)], default=0, decimal_places=1, max_digits=2)
+    features = models.ManyToManyField(
+        ProductFeature, verbose_name="Features", blank=True)
+    color = models.ManyToManyField(
+        Color, verbose_name='Product Colors', blank=True)
+    size = models.ManyToManyField(
+        Size, verbose_name='Product_sizes', blank=True)
+    images = models.ManyToManyField(
+        Images, verbose_name='Product Images', null=True, blank=True)
     price = models.PositiveIntegerField(_('Product Price'), )
-    discount = models.PositiveSmallIntegerField(_('Product Discount'), default=0)
-    quantity = models.PositiveSmallIntegerField(_('Product Quantity'), default=1)
+    discount = models.PositiveSmallIntegerField(
+        _('Product Discount'), default=0)
+    quantity = models.PositiveSmallIntegerField(
+        _('Product Quantity'), default=1)
     available = AvailableManager()
     created_at = models.DateTimeField(_('Created At'), auto_now_add=True)
 
@@ -124,7 +139,18 @@ class ProductVariation(models.Model):
 
     @property
     def price_with_discount(self):
-        return self.price * (1 - self.discount / 100) if self.discount else None
+        discount_amount = self.calculate_discount_amount()
+        return self.price - discount_amount
+
+    def calculate_discount_amount(self):
+        if self.discount:
+            return self.price * (self.discount / 100)
+        else:
+            return 0
+
+    def decrease_product_quantity(self, order_quantity):
+        self.quantity -= order_quantity
+        self.save()
 
     # def price_with_discount_and_extra(self):
     #     features_extra_cost = [feature.extra_cost for feature in self.features.all()]
