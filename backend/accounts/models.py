@@ -21,14 +21,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
     Custom user model.
     """
-    is_designer = models.BooleanField(_('Is Designer'), default=False)
     phone_number = models.CharField(
         _('Phone Number'), max_length=11, unique=True)
     email = models.EmailField(
         _("email address"), max_length=254, default=None, null=True)
     username = models.CharField(_('User Name'), max_length=25)
+
     is_active = models.BooleanField(_('Is Active'), default=True)
     is_admin = models.BooleanField(_('Is Admin'), default=False)
+    is_designer = models.BooleanField(_('Is Designer'), default=False)
+
     created_at = models.DateTimeField(_('Created At'), auto_now_add=True)
 
     objects = UserManager()
