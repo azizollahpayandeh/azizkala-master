@@ -4,6 +4,19 @@ from .managers import UserManager
 from django.utils.translation import gettext as _
 
 
+class IPAddress(models.Model):
+    ip_address = models.GenericIPAddressField(_("آدرس IP"), unique=True)
+    created_at = models.DateTimeField(_("تاریخ ایجاد"), auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("آدرس IP")
+        verbose_name_plural = _("آدرس‌های IP")
+
+    def __str__(self):
+        return self.ip_address
+# ===============
+
+
 class User(AbstractBaseUser, PermissionsMixin):
     """
     Custom user model.
@@ -19,6 +32,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     created_at = models.DateTimeField(_('Created At'), auto_now_add=True)
 
     objects = UserManager()
+
+    ip_address = IPAddress()
 
     USERNAME_FIELD = 'phone_number'
 
@@ -43,18 +58,3 @@ class Otp(models.Model):
 
     def __str__(self):
         return f"{self.phone_number} - {self.code}"
-
-
-# ===============
-
-
-class IPAddress(models.Model):
-    ip_address = models.GenericIPAddressField(_("آدرس IP"), unique=True)
-    created_at = models.DateTimeField(_("تاریخ ایجاد"), auto_now_add=True)
-
-    class Meta:
-        verbose_name = _("آدرس IP")
-        verbose_name_plural = _("آدرس‌های IP")
-
-    def __str__(self):
-        return self.ip_address
