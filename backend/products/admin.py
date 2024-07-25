@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from .models import *
 
 
+
 @admin.action(description="Mark selected products as available")
 def mark_as_is_available(self, request, queryset, des):
     queryset.update(is_available=True)

@@ -155,3 +155,6 @@ class ProductVariation(models.Model):
     # def price_with_discount_and_extra(self):
     #     features_extra_cost = [feature.extra_cost for feature in self.features.all()]
     #     return (self.price + sum(features_extra_cost)) * self.price_with_discount()
+
+
+#  ====================

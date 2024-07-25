@@ -1,7 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, BasePermission
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.shortcuts import get_object_or_404
 from .serializers import *
@@ -45,11 +45,13 @@ class ForgotPasswordView(APIView):
                 data={'detail': {'phone_number': 'required'}})
 
         user = None
-        user = get_object_or_404(User, phone_number=request.data['phone_number'])
+        user = get_object_or_404(
+            User, phone_number=request.data['phone_number'])
 
         # mail_subject = 'Reset Your Password'
         code = random.randint(1000, 9999)
-        Otp.objects.create(phone_number=request.data['phone_number'], code=code)
+        Otp.objects.create(
+            phone_number=request.data['phone_number'], code=code)
         name = user.username if user.username else 'کاربر گرامی سایت فلان'
         to_phone_number = user.phone_number
 
@@ -107,10 +109,45 @@ class ValidateCodeAndResetPasswordView(APIView):
 
         user.set_password(request.data['new_password'])
         user.save()
-        otp = Otp.objects.filter(phone_number__exact=request.data['phone_number'])
+        otp = Otp.objects.filter(
+            phone_number__exact=request.data['phone_number'])
         if otp:
-            for i in otp: i.delete()
+            for i in otp:
+                i.delete()
 
         # if otp: [i.delete() for i in otp]
 
         return Response(status=status.HTTP_200_OK, data={'detail': 'done'})
+
+# ===========
+
+
+class IsDesigner(BasePermission):
+    def has_permission(self, request, view):
+        # Allow access only for designers
+        return request.user.is_authenticated and request.user.is_designer
+
+
+class UserListCreateAPIView(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    # Only designers are allowed access
+    permission_classes = [IsDesigner]
+
+
+class UserDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    # Only designers are allowed access
+    permission_classes = [IsDesigner]
+
+
+class IPAddressListCreateView(generics.ListCreateAPIView):
+    queryset = IPAddress.objects.all()
+    serializer_class = IPAddressSerializer
+
+    def get_queryset(self):
+        return IPAddress.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save()
