@@ -8,13 +8,15 @@ admin.site.unregister(Group)
 
 @admin.register(IPAddress)
 class IPAddressAdmin(admin.ModelAdmin):
-    list_display = ('ip_address', 'created_at')
+    list_display = ('ip_address', 'created_at', 'user')
+    readonly_fields = ['ip_address', 'created_at', 'user']
 
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ('phone_number', 'username', 'is_staff',
-                    'is_active', 'is_superuser', 'created_at')
+                    'is_active', 'is_superuser', 'created_at', )
+    readonly_fields = ['created_at', ]
     list_filter = ('is_superuser', )
     search_fields = ('username', 'phone_number')
     ordering = ('created_at',)

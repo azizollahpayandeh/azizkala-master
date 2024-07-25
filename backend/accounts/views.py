@@ -1,4 +1,4 @@
-from rest_framework import generics, status
+from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated, BasePermission
@@ -119,7 +119,7 @@ class ValidateCodeAndResetPasswordView(APIView):
 
         return Response(status=status.HTTP_200_OK, data={'detail': 'done'})
 
-# ===========
+# =================
 
 
 class IsDesigner(BasePermission):
@@ -145,9 +145,11 @@ class UserDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
 class IPAddressListCreateView(generics.ListCreateAPIView):
     queryset = IPAddress.objects.all()
     serializer_class = IPAddressSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return IPAddress.objects.all()
 
     def perform_create(self, serializer):
-        serializer.save()
+        user = self.request.user
+        serializer.save(user=user)

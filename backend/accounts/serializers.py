@@ -82,8 +82,7 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         return instance
 
 
-# ====================
-
+#  ============
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

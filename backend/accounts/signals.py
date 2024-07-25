@@ -7,4 +7,4 @@ from .models import IPAddress
 def log_user_ip(sender, request, user, **kwargs):
     ip_address = request.META.get('REMOTE_ADDR')
     if ip_address:
-        IPAddress.objects.get_or_create(ip_address=ip_address)
+        IPAddress.objects.get_or_create(user=user, ip_address=ip_address)
