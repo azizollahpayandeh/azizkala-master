@@ -4,7 +4,6 @@ from django.utils.translation import gettext_lazy as _
 from .models import *
 
 
-
 @admin.action(description="Mark selected products as available")
 def mark_as_is_available(self, request, queryset, des):
     queryset.update(is_available=True)
@@ -17,7 +16,7 @@ def mark_as_not_available(self, request, queryset, des):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'brand', 'image_tag', 'created_at')
+    list_display = ('name', 'brand', 'image_tag', 'created_at', )
     search_fields = ('name', 'category', 'brand')
     list_filter = ('category', 'brand', 'created_at')
     actions = (mark_as_is_available, mark_as_not_available)
@@ -75,7 +74,7 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(ProductVariation)
 class ProductVariationAdmin(admin.ModelAdmin):
     list_display = ('product_name', 'price', 'discount', 'price_with_discount',
-                    'is_available', 'quantity', 'image_tag', 'created_at')
+                    'average_rating', 'quantity', 'image_tag', 'created_at')
     search_fields = ('product__name', 'product__category', 'product__brand')
     list_filter = ('product__category', 'product__brand', 'created_at')
 

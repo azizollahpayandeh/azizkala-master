@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'orders.apps.OrdersConfig',
     'dashboard.apps.DashboardConfig',
     'ticket',
+    'rating',
+
 
     'rest_framework',
     'rest_framework_simplejwt',
