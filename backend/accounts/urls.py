@@ -12,5 +12,11 @@ urlpatterns = [
 
     path('forgot_password/', ForgotPasswordView.as_view(), name='forgot_password'),
     path('confirm/', ValidateCodeAndResetPasswordView.as_view(), name='confirm'),
-    path('change_password/<int:pk>/', ChangePasswordView.as_view(), name='change_password'),
+    path('change_password/<int:pk>/',
+         ChangePasswordView.as_view(), name='change_password'),
+
+    path('designers/', UserListCreateAPIView.as_view(), name='user-list-create'),
+    path('designers/<int:pk>/', UserDetailAPIView.as_view(), name='user-detail'),
+    path('ip-addresses/', IPAddressListCreateView.as_view(),
+         name='ip_address_list_create'),
 ]

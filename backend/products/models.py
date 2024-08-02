@@ -128,6 +128,22 @@ class ProductVariation(models.Model):
 
     objects = models.Manager()
 
+    average_rating = models.FloatField(default=0.0)
+    total_rating = models.IntegerField(default=0)
+    last_rated = models.DateTimeField(default=None)
+
+    def update_rating(self, new_rating):
+        self.total_rating += new_rating.score
+        self.average_rating = self.total_rating / self.ratings.count()
+        self.last_rated = new_rating.created_at
+        self.save()
+
+    def average_rating(self):
+        ratings = self.ratings.all()
+        if ratings.exists():
+            return ratings.aggregate(models.Avg('score'))['score__avg']
+        return None
+
     def __str__(self):
         return f'{self.product.name} {self.product_model}'
 
@@ -155,3 +171,6 @@ class ProductVariation(models.Model):
     # def price_with_discount_and_extra(self):
     #     features_extra_cost = [feature.extra_cost for feature in self.features.all()]
     #     return (self.price + sum(features_extra_cost)) * self.price_with_discount()
+
+
+#  ====================

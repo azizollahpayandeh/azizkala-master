@@ -8,17 +8,23 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
     Custom user model.
     """
-    phone_number = models.CharField(_('Phone Number'), max_length=11, unique=True)
+    phone_number = models.CharField(
+        _('Phone Number'), max_length=11, unique=True)
+    email = models.EmailField(
+        _("email address"), max_length=254, default=None, null=True)
     username = models.CharField(_('User Name'), max_length=25)
+
     is_active = models.BooleanField(_('Is Active'), default=True)
     is_admin = models.BooleanField(_('Is Admin'), default=False)
+    is_designer = models.BooleanField(_('Is Designer'), default=False)
+
     created_at = models.DateTimeField(_('Created At'), auto_now_add=True)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'phone_number'
 
-    def __str__(self):
+    def str(self):
         return f'{self.phone_number}'
 
     @property
@@ -39,3 +45,18 @@ class Otp(models.Model):
 
     def __str__(self):
         return f"{self.phone_number} - {self.code}"
+
+# =====
+
+
+class IPAddress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # ارتباط با کاربر
+    ip_address = models.GenericIPAddressField(_("آدرس IP"))
+    created_at = models.DateTimeField(_("تاریخ ایجاد"), auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("آدرس IP")
+        verbose_name_plural = _("آدرس‌های IP")
+
+    def __str__(self):
+        return f"{self.ip_address} - {self.user}"

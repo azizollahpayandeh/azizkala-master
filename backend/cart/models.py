@@ -28,6 +28,7 @@ class Cart(models.Model):
         on_delete=models.SET_NULL,
         related_name='carts'
     )
+    is_active = models.BooleanField(_("active"), default=True)
 
     def calc_price_with_coupon(self):
         total_price = self.total_price

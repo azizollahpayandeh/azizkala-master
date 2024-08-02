@@ -33,7 +33,9 @@ schema_view = get_schema_view(
         default_version='v1',
         description="Django-Shop API Documentation powered by swagger",
         # terms_of_service="https://www.example.com/policies/terms/",
-        contact=openapi.Contact(email="erfansafarzad7@gmail.com"),
+        contact=openapi.Contact(
+            email="erfansafarzad7@gmail.com , hameddjf33@gmail.com",
+            phone='+98 993 183 5803',),
         license=openapi.License(name="BSD License"),
     ),
     public=True,
@@ -54,6 +56,7 @@ urlpatterns = [
     path('api/orders/', include('orders.urls')),
     path('api/dashboard/', include('dashboard.urls')),
     path('api/ticket/', include('ticket.urls')),
+    path('api/rating/', include('rating.urls')),
 
 ]
 

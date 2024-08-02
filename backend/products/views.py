@@ -19,7 +19,8 @@ class ProductView(generics.ListAPIView):
     serializer_class = ProductVariationSerializer
     permission_classes = [permissions.AllowAny, ]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['short_description', 'product__name', 'product__category__title', 'product__brand__title']
+    search_fields = ['short_description', 'product__name',
+                     'product__category__title', 'product__brand__title']
     ordering_fields = ['created_at', ]
     # pagination_class =
 
