@@ -2,6 +2,8 @@ from django.db import models
 from django.utils.translation import gettext as _
 from products.models import ProductVariation, Color
 from accounts.models import User
+from coupons.models import Coupon
+
 # class Cart(models.Model):
 #     user = models.ForeignKey(
 #         User, on_delete=models.CASCADE, verbose_name='User')
@@ -22,11 +24,11 @@ class Cart(models.Model):
         related_name='carts'
     )
     coupon = models.ForeignKey(
-        'orders.Coupon',
+        Coupon,
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name='carts'
+        related_name='cart_coupons'
     )
     is_active = models.BooleanField(_("active"), default=True)
 
@@ -65,6 +67,9 @@ class Cart(models.Model):
             return total_price_with_discount - discount_amount
         else:
             return total_price_with_discount
+
+    class Meta:
+        app_label = 'cart'
 
 
 class CartItem(models.Model):

@@ -1,12 +1,16 @@
 from rest_framework import permissions, generics, status, filters
 from rest_framework.views import APIView
-from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
+
+from django.shortcuts import get_object_or_404
+
 from cart.models import Cart
 from products.models import ProductVariation
-from .models import Order, Coupon
-from .serializers import OrderSerializer
+from coupons.models import Coupon
 from dashboard.models import Dashboard
+
+from .models import Order
+from .serializers import OrderSerializer
 
 
 class OrderView(APIView):
@@ -14,7 +18,8 @@ class OrderView(APIView):
 
     def get(self, request, format=None):
         try:
-            queryset = Order.objects.filter(dashboard__user__exact=request.user)
+            queryset = Order.objects.filter(
+                dashboard__user__exact=request.user)
             serializer = OrderSerializer(queryset, many=True)
 
         except Dashboard.DoesNotExist:
@@ -58,7 +63,8 @@ class OrderView(APIView):
                     total += cart.quantity * cart.product.price if not cart.product.discount \
                         else cart.quantity * (cart.product.price * (1 - cart.product.discount / 100))
 
-                    admin_note += f'{cart.product.id}-{cart.product}-{cart.color}-{cart.quantity}&&'
+                    admin_note += f'{cart.product.id}-{
+                        cart.product}-{cart.color}-{cart.quantity}&&'
 
                 cart.delete()
 
@@ -89,7 +95,8 @@ class OrderView(APIView):
     def delete(self, request, format=None):
         if 'code' in request.data:
             code = request.data['code']
-            order = get_object_or_404(Order, dashboard__user__exact=request.user, code__exact=code)
+            order = get_object_or_404(
+                Order, dashboard__user__exact=request.user, code__exact=code)
             # order.products.clear(id=product_id)
             order.status = 'Canceled'
             order.save()
@@ -101,4 +108,3 @@ class OrderView(APIView):
         return Response(
             status=status.HTTP_200_OK,
             data={'detail': 'enter order code'})
-

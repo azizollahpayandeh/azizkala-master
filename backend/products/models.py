@@ -117,7 +117,7 @@ class ProductVariation(models.Model):
     size = models.ManyToManyField(
         Size, verbose_name='Product_sizes', blank=True)
     images = models.ManyToManyField(
-        Images, verbose_name='Product Images', null=True, blank=True)
+        Images, verbose_name='Product Images', blank=True)
     price = models.PositiveIntegerField(_('Product Price'), )
     discount = models.PositiveSmallIntegerField(
         _('Product Discount'), default=0)
@@ -130,7 +130,7 @@ class ProductVariation(models.Model):
 
     average_rating = models.FloatField(default=0.0)
     total_rating = models.IntegerField(default=0)
-    last_rated = models.DateTimeField(default=None)
+    last_rated = models.DateTimeField(null=True, blank=True, default=None)
 
     def update_rating(self, new_rating):
         self.total_rating += new_rating.score
