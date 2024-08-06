@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'dashboard.apps.DashboardConfig',
     'ticket',
     'rating',
+    'coupons',
 
 
     'rest_framework',
