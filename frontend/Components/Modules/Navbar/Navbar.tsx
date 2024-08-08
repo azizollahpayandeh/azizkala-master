@@ -1,87 +1,75 @@
 "use client"
-import Link from "next/link"
-
-
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { IoSearch } from "react-icons/io5";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { HiOutlineShoppingCart } from "react-icons/hi2";
 import { IoMdMenu } from "react-icons/io";
-import { useEffect, useRef, useState } from "react";
-import Menu from "../../Modules/Menu/MenuNav";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { FaRegCircleUser } from "react-icons/fa6";
+import Menu from "../../Modules/Menu/MenuNav";
 import UserMenu from "../UserMenu/UserMenu";
 import { isLogging } from "@/utils/isLoggesIn/isLoggesIn";
 
-
-
-
-
 export default function Navbar() {
-  const path = usePathname()
+  const path = usePathname();
 
   const [clickHandlerMenu, setClickHandlerMenu] = useState(false);
   const [clickUserHandlerMenu, setClickUserHandlerMenu] = useState(false);
-  const toggleMenu = () => {
-    setClickHandlerMenu(!clickHandlerMenu);
-  };
-  const handleDocumentClick = (event: MouseEvent) => {
-    if (clickHandlerMenu && menuRef.current && !menuRef.current.contains(event.target as Node)) {
-      setClickHandlerMenu(false);
-    }
-  };
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    document.addEventListener("click", handleDocumentClick)
+    // این حالت با استفاده از isLogging مقداردهی می‌شود
+    setIsLoggedIn(isLogging);
+
+    const handleDocumentClick = (event: MouseEvent) => {
+      if (clickHandlerMenu && menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setClickHandlerMenu(false);
+      }
+    };
+
+    document.addEventListener("click", handleDocumentClick);
 
     return () => {
       document.removeEventListener("click", handleDocumentClick);
     };
-  }, [clickHandlerMenu])
+  }, [clickHandlerMenu]);
 
-
+  const toggleMenu = () => {
+    setClickHandlerMenu(!clickHandlerMenu);
+  };
 
   const toggleUserMenu = () => {
     setClickUserHandlerMenu(!clickUserHandlerMenu);
-  }
-
-
-
-
-  const menuRef = useRef<HTMLDivElement | null>(null);
-
+  };
 
   return (
     <>
       <header className="bg-white py-4 border-b-2 border-gray-100">
-        <div className=" mx-auto">
-          <div className="flex justify-between items-center w-full  py-3">
+        <div className="mx-auto">
+          <div className="flex justify-between items-center w-full py-3">
             <div>
               <Link href="/">
                 <Image alt="logo" width={170} height={50} src="/assets/azizkala-logo-black.png" />
               </Link>
             </div>
-            <div className="flex items-center lg:space-x-20  space-x-5">
+            <div className="flex items-center lg:space-x-20 space-x-5">
               <nav className="hidden lg:flex space-x-6 xl:space-x-14">
-                <Link className={`text-gray-700 font-[500] hover:text-gray-500 ${path == "/" ? "border-b-2 border-gray-500 border-opacity-80" : ""} `} href="/">
+                <Link className={`text-gray-700 font-[500] hover:text-gray-500 ${path === "/" ? "border-b-2 border-gray-500 border-opacity-80" : ""}`} href="/">
                   Home
                 </Link>
-                <Link className={`text-gray-700 font-[500] hover:text-gray-500 ${path == "/concat" ? "border-b-2 border-gray-500 border-opacity-80" : ""} `} href="/concat">
+                <Link className={`text-gray-700 font-[500] hover:text-gray-500 ${path === "/concat" ? "border-b-2 border-gray-500 border-opacity-80" : ""}`} href="/concat">
                   Contact
                 </Link>
-                <Link className={`text-gray-700 font-[500] hover:text-gray-500 ${path == "/about" ? "border-b-2 border-gray-500 border-opacity-80" : ""} `} href="/about">
+                <Link className={`text-gray-700 font-[500] hover:text-gray-500 ${path === "/about" ? "border-b-2 border-gray-500 border-opacity-80" : ""}`} href="/about">
                   About
                 </Link>
-                {isLogging ? (
-                  <Link className={`text-gray-700 font-[500] hover:text-gray-500 ${path == "/auth/signup" ? "border-b-2 border-gray-500 border-opacity-80" : ""} `} href="/auth/signup">
-                  Log Out
+                <Link className={`text-gray-700 font-[500] hover:text-gray-500 ${(path === "/auth/signup" || path === "/auth/login") ? "border-b-2 border-gray-500 border-opacity-80" : ""}`} href={isLoggedIn ? "/auth/logout" : "/auth/signup"}>
+                  {isLoggedIn ? "Log Out" : "Sign Up"}
                 </Link>
-                ) : (
-                  <Link className={`text-gray-700 font-[500] hover:text-gray-500 ${path == "/auth/signup" ? "border-b-2 border-gray-500 border-opacity-80" : ""} `} href="/auth/signup">
-                    Sign Up
-                  </Link>
-                )}
 
               </nav>
             </div>
@@ -104,32 +92,27 @@ export default function Navbar() {
               </Link>
 
               {/* start my user section */}
-              {isLogging ? (
+              {isLoggedIn && (
                 <FaRegCircleUser className="text-gray-500 cursor-pointer" fontSize={25} onClick={toggleUserMenu} />
-              ) : (
-                <div></div>
               )}
               {/* finish my user section */}
 
               <IoMdMenu className="text-gray-500 lg:hidden cursor-pointer" onClick={toggleMenu} fontSize={25} />
             </div>
           </div>
-          <div className={`menu flex justify-end  lg:hidden pr-[150px] ${clickHandlerMenu ? "block" : "hidden"}`} ref={menuRef}>
+          <div className={`menu flex justify-end lg:hidden pr-[150px] ${clickHandlerMenu ? "block" : "hidden"}`} ref={menuRef}>
             <Menu />
           </div>
 
           {/* start my user section */}
-          {isLogging ? (
-            <div className={`menu flex justify-end  pr-[150px] ${clickUserHandlerMenu ? "block" : "hidden"}`}>
+          {isLoggedIn && (
+            <div className={`menu flex justify-end pr-[150px] ${clickUserHandlerMenu ? "block" : "hidden"}`}>
               <UserMenu />
             </div>
-          ) : (
-            <div></div>
           )}
           {/* finish my user section */}
-
         </div>
       </header>
     </>
-  )
+  );
 }
