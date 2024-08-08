@@ -1,23 +1,24 @@
 "use client";
 import Button from "@/Components/Modules/Button/Button";
 import Image from "next/image";
+import { useRouter, usePathname } from 'next/navigation';
 import React, { useEffect, useState } from "react";
 import { TbTruckDelivery } from "react-icons/tb";
 import { GiReturnArrow } from "react-icons/gi";
 import { CiHeart } from "react-icons/ci";
 import axios from "axios";
-import { usePathname } from "next/navigation";
 import Swal from 'sweetalert2';
-
+import { getCookie } from 'cookies-next';
 
 export default function Page() {
+  const router = useRouter();
+  const id = usePathname();
+  const idNumber = id.split("/").pop();
+
   const [productSize, setProductSize] = useState("");
   const [count, setCount] = useState(0);
   const [productData, setProductData] = useState(null);
   const [error, setError] = useState(null);
-
-  const id = usePathname();
-  const idNumber = id.split("/").pop();
 
   useEffect(() => {
     axios
@@ -32,42 +33,55 @@ export default function Page() {
   }, [idNumber]);
 
   const minusCount = () => {
-    setCount((prevCount) => (prevCount > 0 ? prevCount - 1 : prevCount));
+    setCount((prevCount) => Math.max(prevCount - 1, 0));
   };
 
   const plusCount = () => {
     setCount((prevCount) => prevCount + 1);
   };
 
-  const sizeOptions = ["XS", "S", "M", "L", "XL"];
-
   const handleBuyNow = async () => {
+    const token = getCookie('access'); // گرفتن توکن از کوکی
+
     const body = {
       product_id: idNumber,
       quantity: count,
-      color: productSize // فرض می‌کنیم رنگ محصول در productSize ذخیره شده است
+      color: "red",
     };
-  
+
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/cart/add-or-remove/', body);
-      console.log(response.data);
+      const response = await axios.post(
+        'http://127.0.0.1:8000/api/cart/add-or-remove/',
+        body,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // اضافه کردن توکن در هدر درخواست
+            "Content-Type": "application/json"
+          }
+        }
+      );
+      
       Swal.fire({
         title: 'Success!',
         text: 'The product has been added to your cart.',
         icon: 'success',
-        confirmButtonText: 'OK'
-      });
+        confirmButtonText: 'Go to cart'
+      }).then(() => router.push("/cart"));
+      
     } catch (error) {
       console.error('There was an error making the POST request', error);
+
+      // نمایش پیام خطا با اطلاعات دقیق‌تر از سرور
       Swal.fire({
         title: 'Error!',
-        text: 'There was an error adding the product to your cart.',
+        text: error.response?.data?.detail || 'There was an error adding the product to your cart.',
         icon: 'error',
         confirmButtonText: 'OK'
       });
     }
   };
-  
+
+  const sizeOptions = ["XS", "S", "M", "L", "XL"];
 
   return (
     <>
@@ -76,10 +90,10 @@ export default function Page() {
           <div className="flex flex-col">
             <div className="flex flex-col lg:flex-row lg:gap-10 w-full lg:w-95%">
               <div className="hidden lg:flex lg:flex-col lg:gap-4">
-                {productData?.images?.slice(0, 4).map((image, index) => (
+                {productData?.images?.slice(0, 4).map((image) => (
                   <Image
-                    key={index}
-                    src={image}
+                    key={image.id} // Use image.id as the key
+                    src={image.image} // Ensure this points to the correct URL
                     alt="productImages"
                     width={170}
                     height={138}
@@ -87,6 +101,7 @@ export default function Page() {
                   />
                 ))}
               </div>
+
               <div className="hidden lg:block">
                 <Image
                   src={productData?.images[2]?.image}
@@ -150,10 +165,10 @@ export default function Page() {
             <div className="flex justify-between pt-[20px]">
               <div className="md:w-[160px] w-[140px] border flex">
                 <div
-                  className="border-r w-[40px] flex justifycenter items-center hover:bg-red hover:text-white cursor-pointer"
+                  className="border-r w-[40px] flex justify-center items-center hover:bg-red hover:text-white cursor-pointer"
                   onClick={minusCount}
                 >
-                _
+                  -
                 </div>
                 <div className="w-[80px] flex justify-center items-center">
                   {count}
@@ -165,8 +180,8 @@ export default function Page() {
                   +
                 </div>
               </div>
-              <div>
-                <Button value="Buy Now" onClick={handleBuyNow} />
+              <div onClick={handleBuyNow}>
+                <Button value="Buy Now"  />
               </div>
               <div>
                 <div className="w-[40px] h-full border flex justify-center items-center cursor-pointer rounded-sm">
