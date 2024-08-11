@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from products.models import ProductVariation
-from .models import Cart
+from .models import Cart, CartItem
 from .serializers import CartSerializer, CartItemSerializer
 
 

@@ -91,9 +91,9 @@ class CartItem(models.Model):
     def total_price_with_discount(self):
         return self.total_price(including_discount=True)
 
-    def save(self, *args, **kwargs):
-        self.product.decrease_product_quantity(self.quantity)
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     self.product.decrease_product_quantity(self.quantity)
+    #     super().save(*args, **kwargs)
 
     @property
     def product_color(self):
