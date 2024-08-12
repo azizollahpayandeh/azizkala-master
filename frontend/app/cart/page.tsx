@@ -1,27 +1,57 @@
-"use client"
+"use client";
 import Button from "@/Components/Modules/Button/Button";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { getCookie } from 'cookies-next';
 
 export default function Page() {
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState({ cart_items: [] }); // مقدار اولیه به شکل آبجکت با یک آرایه خالی
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/cart/')
+    const token = getCookie('access');
+    console.log('Token:', token);
+
+    axios.get('http://127.0.0.1:8000/api/cart/', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    })
       .then((response) => {
-        setCartItems(response.data);
+        setCartItems(response.data); // حالا cartItems به کل داده‌ها اشاره دارد
+        console.log("Data received: ", response.data);
       })
       .catch((error) => {
         setError('There was an error making the GET request');
-        console.error(error);
+        console.error("Error: ", error);
       });
   }, []);
 
+  const addItemToCart = async (body) => {
+    try {
+      const token = getCookie('access');
+      const response = await axios.post(
+        'http://127.0.0.1:8000/api/cart/add-or-remove/',
+        body,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+      
+      console.log("Response received: ", response.data);
+    } catch (error) {
+      console.error("Error during POST request: ", error);
+    }
+  };
+
   const calculateSubtotal = () => {
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    return cartItems.cart_items.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
   return (
@@ -36,7 +66,7 @@ export default function Page() {
           </div>
 
           <div className="products pt-[40px] flex flex-col gap-9">
-            {cartItems.map((item, index) => (
+            {cartItems.cart_items.map((item, index) => (
               <div key={index} className="product flex justify-between shadow-md h-[80px] items-center rounded-lg">
                 <div className="flex gap-3">
                   <Image
@@ -57,7 +87,7 @@ export default function Page() {
                   {item.quantity}
                 </p>
                 <p className="lg:text-[16px] text-[14px] font-[400] pr-[20px] lg:pr-[30px]">
-                  ${item.price * item.quantity}
+                  ${item.total_price_with_discount}
                 </p>
               </div>
             ))}

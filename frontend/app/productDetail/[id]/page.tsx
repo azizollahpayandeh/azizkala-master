@@ -44,9 +44,9 @@ export default function Page() {
     const token = getCookie('access'); // گرفتن توکن از کوکی
 
     const body = {
-      product_id: idNumber,
+      product: idNumber,
       quantity: count,
-      color: "red",
+      // color: "red",
     };
 
     try {
