@@ -77,6 +77,8 @@ class CartItem(models.Model):
         on_delete=models.CASCADE,
         related_name='cart_items'
     )
+    color = models.CharField(max_length=20, null=True, blank=True)
+    size = models.CharField(max_length=20, null=True, blank=True)
     quantity = models.PositiveIntegerField(default=1)
     total = models.PositiveIntegerField(default=0)
 
@@ -101,7 +103,7 @@ class CartItem(models.Model):
 
     @property
     def product_name(self):
-        return self.product.name
+        return self.product.product.name
 
     # def add_to_cart(self, product_variation, quantity):
     #     if product_variation in self.cart_items.all():
