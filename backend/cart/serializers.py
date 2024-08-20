@@ -16,6 +16,7 @@ class CartItemSerializer(serializers.ModelSerializer):
         model = CartItem
         fields = ('id', 'product', 'quantity', 'size', 'color', 'cover_image',
                   'total_price', 'total_price_with_discount')
+        read_only_fields = ('cover_image', 'total_price', 'total_price_with_discount')
         depth = 3
 
     def get_total_price(self, obj):
