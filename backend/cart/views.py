@@ -12,13 +12,13 @@ class CartView(APIView):
 
     def get(self, request, *args, **kwargs):
         user = request.user
-        cart = Cart.objects.filter(user=user, is_active=True).first()
-        if cart:
-            # اطلاعات سبد خرید رو پردازش کن
-            serializer = CartSerializer(cart)
-            return Response(serializer.data)
-        else:
-            return Response({'message': 'سبد خرید فعالی یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
+        cart, _ = Cart.objects.get_or_create(user=user)
+
+        serializer = CartSerializer(cart)
+        return Response(serializer.data)
+        # if cart:
+        # else:
+        #     return Response({'message': 'سبد خرید فعالی یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
 
     # def get(self, request, format=None):
     #     cart = Cart.objects.get(user=request.user)

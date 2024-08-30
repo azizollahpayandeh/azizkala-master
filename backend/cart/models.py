@@ -19,39 +19,40 @@ from coupons.models import Coupon
 
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    products = models.ManyToManyField(
-        'products.ProductVariation',
-        through='CartItem',
-        related_name='carts'
-    )
-    coupon = models.ForeignKey(
-        Coupon,
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='carts'
-    )
-    is_active = models.BooleanField(_("active"), default=True)
+    # products = models.ManyToManyField(
+    #     'products.ProductVariation',
+    #     through='CartItem',
+    #     related_name='carts'
+    # )
+    # coupon = models.ForeignKey(
+    #     Coupon,
+    #     null=True,
+    #     blank=True,
+    #     on_delete=models.SET_NULL,
+    #     related_name='carts'
+    # )
+    # is_active = models.BooleanField(_("active"), default=True)
 
-    def calc_price_with_coupon(self):
-        total_price = self.total_price
-        if self.coupon:
-            total_price_with_discount = self.total_price_with_discount()
-            total_price_with_coupon = self.apply_coupon(
-                self.coupon, total_price_with_discount)
-        else:
-            total_price_with_coupon = total_price
-        return total_price_with_coupon
+    # def calc_price_with_coupon(self):
+    #     total_price = self.total_price
+    #     if self.coupon:
+    #         total_price_with_discount = self.total_price_with_discount()
+    #         total_price_with_coupon = self.apply_coupon(
+    #             self.coupon, total_price_with_discount)
+    #     else:
+    #         total_price_with_coupon = total_price
+    #     return total_price_with_coupon
 
+    @property
     def total_price_with_discount(self):
         total_price_with_discount = 0
         for item in self.cart_items:
-            total_price_with_discount += item.total_price_with_discount
+            total_price_with_discount += item.cart_price_with_discount
         return total_price_with_discount
 
-    @property
-    def total_price_with_coupon(self):
-        return self.calc_price_with_coupon()
+    # @property
+    # def total_price_with_coupon(self):
+    #     return self.calc_price_with_coupon()
 
     @property
     def cart_items(self):
@@ -59,15 +60,15 @@ class Cart(models.Model):
 
     @property
     def total_price(self):
-        return sum(item.total_price() for item in self.cart_items)
+        return sum(item.cart_price() for item in self.cart_items)
 
-    def apply_coupon(self, coupon, total_price_with_discount):
-        if coupon.is_valid(order_status='OnPay'):
-            discount_amount = coupon.calculate_discount_amount(
-                total_price_with_discount)
-            return total_price_with_discount - discount_amount
-        else:
-            return total_price_with_discount
+    # def apply_coupon(self, coupon, total_price_with_discount):
+    #     if coupon.is_valid(order_status='OnPay'):
+    #         discount_amount = coupon.calculate_discount_amount(
+    #             total_price_with_discount)
+    #         return total_price_with_discount - discount_amount
+    #     else:
+    #         return total_price_with_discount
 
 
 class CartItem(models.Model):
@@ -82,7 +83,7 @@ class CartItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     total = models.PositiveIntegerField(default=0)
 
-    def total_price(self, including_discount=False):
+    def cart_price(self, including_discount=False):
         if including_discount:
             price = self.product.price_with_discount
         else:
@@ -90,8 +91,8 @@ class CartItem(models.Model):
         return price * self.quantity
 
     @property
-    def total_price_with_discount(self):
-        return self.total_price(including_discount=True)
+    def cart_price_with_discount(self):
+        return self.cart_price(including_discount=True)
 
     # def save(self, *args, **kwargs):
     #     self.product.decrease_product_quantity(self.quantity)
