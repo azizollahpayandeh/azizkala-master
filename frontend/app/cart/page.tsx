@@ -1,14 +1,28 @@
 "use client";
 import Button from "@/Components/Modules/Button/Button";
 import Image from "next/image";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { getCookie } from 'cookies-next';
+import Link from "next/link";
 
 export default function Page() {
-  const [cartItems, setCartItems] = useState({ cart_items: [] }); // مقدار اولیه به شکل آبجکت با یک آرایه خالی
+  const [cartItems, setCartItems] = useState({ cart_items: [] });
   const [error, setError] = useState(null);
+
+  // Create a formatter for currency values
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(value);
+  };
+
+  const handleclick = () => {
+    window.location.reload();
+  }
 
   useEffect(() => {
     const token = getCookie('access');
@@ -21,7 +35,7 @@ export default function Page() {
       }
     })
       .then((response) => {
-        setCartItems(response.data); // حالا cartItems به کل داده‌ها اشاره دارد
+        setCartItems(response.data);
         console.log("Data received: ", response.data);
       })
       .catch((error) => {
@@ -50,9 +64,7 @@ export default function Page() {
     }
   };
 
-  const calculateSubtotal = () => {
-    return cartItems.cart_items.reduce((total, item) => total + item.price * item.quantity, 0);
-  };
+
 
   return (
     <>
@@ -81,23 +93,25 @@ export default function Page() {
                   </p>
                 </div>
                 <p className="lg:text-[16px] text-[14px] font-[400] pr-[40px] lg:pr-[140px]">
-                  ${item.price}
+                  {formatCurrency(item.price)}
                 </p>
                 <p className="lg:text-[16px] text-[14px] font-[400] pr-[70px] lg:pr-[150px]">
                   {item.quantity}
                 </p>
                 <p className="lg:text-[16px] text-[14px] font-[400] pr-[20px] lg:pr-[30px]">
-                  ${item.total_price_with_discount}
+                  {formatCurrency(item.total_price_with_discount)}
                 </p>
               </div>
             ))}
           </div>
 
           <div className="flex justify-between mt-[20px]">
-            <button className="border border-y-1 border-y-slate-900 border-x-1 border-x-slate-900 hover:text-white hover:border-none inline-flex justify-center items-center rounded-[5px] text-[14px] font-[500] w-[150px] h-[40px] hover:bg-red transition-all duration-300">
-              Return to Shop
-            </button>
-            <button className="border border-y-1 border-y-slate-900 border-x-1 border-x-slate-900 hover:text-white hover:border-none inline-flex justify-center items-center rounded-[5px] text-[14px] font-[500] w-[150px] h-[40px] hover:bg-red transition-all duration-300">
+            <Link href="/">
+              <button className="border border-y-1 border-y-slate-900 border-x-1 border-x-slate-900 hover:text-white hover:border-none inline-flex justify-center items-center rounded-[5px] text-[14px] font-[500] w-[150px] h-[40px] hover:bg-red transition-all duration-300">
+                Return to Shop
+              </button>
+            </Link>
+            <button className="border border-y-1 border-y-slate-900 border-x-1 border-x-slate-900 hover:text-white hover:border-none inline-flex justify-center items-center rounded-[5px] text-[14px] font-[500] w-[150px] h-[40px] hover:bg-red transition-all duration-300" onClick={handleclick}>
               Update Cart
             </button>
           </div>
@@ -117,7 +131,7 @@ export default function Page() {
             <h2 className="text-[20px] font-[500]">Cart Total</h2>
             <div className="flex justify-between">
               <p className="text-[17px]">Subtotal:</p>
-              <p className="text-[17px]">${calculateSubtotal()}</p>
+              <p className="text-[17px]">{formatCurrency(cartItems.total_price_with_discount)}</p>
             </div>
             <hr />
             <div className="flex justify-between">
@@ -127,7 +141,7 @@ export default function Page() {
             <hr />
             <div className="flex justify-between">
               <p className="text-[17px]">Total:</p>
-              <p className="text-[17px]">${calculateSubtotal()}</p>
+              <p className="text-[17px]">{formatCurrency(cartItems.total_price_with_discount)}</p>
             </div>
             <div className="flex justify-center items-center">
               <Link href={'/checkout'}>
@@ -137,7 +151,6 @@ export default function Page() {
           </div>
         </div>
       </div>
-      {error && <p className="text-red-500">{error}</p>}
     </>
   );
 }

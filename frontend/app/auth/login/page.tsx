@@ -48,20 +48,20 @@ export default function Page() {
     }
   };
 
-  const fetchData = async () => {
-    try {
-      const response = await Axios.get('http://127.0.0.1:8000/api/dashboard/', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
-      });
-      console.log(response.data);
+  // const fetchData = async () => {
+  //   try {
+  //     const response = await Axios.get('http://127.0.0.1:8000/api/dashboard/', {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //         "Content-Type": "application/json"
+  //       }
+  //     });
+  //     console.log(response.data);
       
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   return (
     <>
@@ -109,7 +109,6 @@ export default function Page() {
                 </p>
               </Link>
             </div>
-            <button onClick={fetchData}>Fetch Data</button>
           </div>
         </div>
       </div>

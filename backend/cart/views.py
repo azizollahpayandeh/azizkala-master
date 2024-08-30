@@ -37,6 +37,8 @@ class CartEditView(APIView):
         if serializer.is_valid():
             product = serializer.validated_data['product']
             quantity = serializer.validated_data['quantity']
+            color = serializer.validated_data.get('color', '')
+            size = serializer.validated_data.get('size', '')
 
             if not product.is_available:
                 return Response(
@@ -46,7 +48,7 @@ class CartEditView(APIView):
             cart, _ = Cart.objects.get_or_create(user=request.user)
             cart_item, created = CartItem.objects.get_or_create(
                 cart=cart, product=product,
-                defaults={'quantity': quantity}
+                defaults={'quantity': quantity, 'color': color, 'size': size}
             )
 
             if not created:
@@ -55,7 +57,7 @@ class CartEditView(APIView):
 
             return Response(
                 status=status.HTTP_200_OK,
-                data={"detail": f'{quantity} quantity of product {product} added to your cart '})
+                data={"detail": f'done!'})
 
         return Response(
             status=status.HTTP_400_BAD_REQUEST,

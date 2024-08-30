@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
-
+import Link from "next/link";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -12,7 +12,6 @@ import Product from "@/Components/Modules/Product/product";
 import ButtonWithoutBg from "@/Components/Modules/ButtonWithoutBg/ButtonWithoutBg";
 import axios from "axios";
 import { ProductType as ProductType } from "@/types";
-import Link from "next/link";
 
 export default function page() {
   const [wishlistProducts, setWishlistProducts] = useState<ProductType[]>([]);
@@ -43,14 +42,17 @@ export default function page() {
       <div className="pt-[100px]">
         <div className="title flex justify-between pt-[25px] items-center">
           <h1 className="md:text-[34px] text-[30px] font-[600] ">
-            Wishlist (0)
+            Wishlist (6)
           </h1>
 
-          <div className="">
-            <ButtonWithoutBg value="Move All To Bag" />
-          </div>
-        </div>
+          <Link href="/cart">
+            <div className="">
+              <ButtonWithoutBg value="Move All To Bag" />
+            </div>
+          </Link>
 
+        </div>
+        \
         <div className="sliders mt-[50px]">
           <Swiper
             modules={[Navigation, Pagination, Scrollbar, A11y]}
@@ -79,18 +81,16 @@ export default function page() {
                 slidesPerView: 1,
               },
             }}
-          >
-            {wishlistProducts.map((product) => (
-              <SwiperSlide key={product.id}>
-                <Product
-                  name={product.product_name}
-                  price={product.price}
-                  imageUrl={product.images[0]?.image}
-                  productId={product.id}
-
-                />
-              </SwiperSlide>
-            ))}
+          >  {justForYouProducts.map((product) => (
+            <SwiperSlide key={product.id} className="">
+              <Product
+                name={product.product_name}
+                price={product.price}
+                imageUrl={product.images[0]?.image}
+                productId={product.id}
+              />
+            </SwiperSlide>
+          ))}
           </Swiper>
         </div>
 
@@ -156,7 +156,7 @@ export default function page() {
             </Swiper>
           </div>
         </div>
-      </div>
+      </div >
     </>
   );
 }

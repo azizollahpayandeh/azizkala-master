@@ -45,7 +45,7 @@ export default function MembersAbout() {
             }}
             breakpoints={{
               1380: {
-                slidesPerView: 4,
+                slidesPerView: 4  ,
               },
               1024: {
                 slidesPerView: 3,
@@ -62,20 +62,19 @@ export default function MembersAbout() {
             }}
           >
             <SwiperSlide className="">
-              <MembersAboutCart />
+              <MembersAboutCart Name="Azizollah Payandeh" ImageSrc="/assets/AzizollahPic.jpg" Role="Site manager" />
             </SwiperSlide>
             <SwiperSlide className="">
-              <MembersAboutCart />
+              <MembersAboutCart Name="AmirMohammad" ImageSrc="/assets/AmirPic.jpg" Role="FrontEnd Developer" /> 
             </SwiperSlide>
             <SwiperSlide className="">
-              <MembersAboutCart />
+              <MembersAboutCart Name="Erfan" ImageSrc="/assets/Erfan.jpg" Role="Backend Developer" />
+            </SwiperSlide>            <SwiperSlide className="">
+              <MembersAboutCart Name="Azizollah Payandeh" ImageSrc="/assets/AzizollahPic.jpg" Role="Site manager" />
             </SwiperSlide>
             <SwiperSlide className="">
-              <MembersAboutCart />
-            </SwiperSlide>
-            <SwiperSlide className="">
-              <MembersAboutCart />
-            </SwiperSlide>
+              <MembersAboutCart Name="AmirMohammad" ImageSrc="/assets/AmirPic.jpg" Role="FrontEnd Developer" />
+            </SwiperSlide>\
           </Swiper>
         </div>
       </div>
