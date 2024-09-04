@@ -14,7 +14,7 @@ class CartItemInline(admin.TabularInline):
 @admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'total_price',
-                    'total_price_with_discount', 'total_price_with_coupon')
+                    'total_price_with_discount',)
     inlines = [
         CartItemInline,
     ]
@@ -24,9 +24,6 @@ class CartAdmin(admin.ModelAdmin):
 
     def total_price_with_discount(self, obj):
         return obj.total_price_with_discount()
-
-    def total_price_with_coupon(self, obj):
-        return obj.total_price_with_coupon
 
 
 @admin.register(CartItem)

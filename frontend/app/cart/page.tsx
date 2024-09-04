@@ -82,7 +82,7 @@ export default function Page() {
               <div key={index} className="product flex justify-between shadow-md h-[80px] items-center rounded-lg">
                 <div className="flex gap-3">
                   <Image
-                    src={item.image}
+                    src={item.cover_image}
                     alt="productImage"
                     width={70}
                     height={39}

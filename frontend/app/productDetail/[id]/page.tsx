@@ -46,7 +46,8 @@ export default function Page() {
     const body = {
       product: idNumber,
       quantity: count,
-      // color: "red",
+      color: "red",
+      size: productSize
     };
 
     try {
