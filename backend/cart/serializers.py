@@ -9,15 +9,19 @@ class CartItemSerializer(serializers.ModelSerializer):
     product = serializers.PrimaryKeyRelatedField(
         queryset=ProductVariation.objects.all()
     )
+    product_price = serializers.SerializerMethodField()
     total_price = serializers.SerializerMethodField()
     total_price_with_discount = serializers.SerializerMethodField()
 
     class Meta:
         model = CartItem
-        fields = ('id', 'product', 'quantity', 'size', 'color', 'cover_image',
+        fields = ('id', 'product', 'quantity', 'size', 'color', 'cover_image', 'product_price',
                   'total_price', 'total_price_with_discount')
         read_only_fields = ('cover_image', 'total_price', 'total_price_with_discount')
         depth = 3
+
+    def get_product_price(self, obj):
+        return obj.product.price_with_discount
 
     def get_total_price(self, obj):
         return obj.cart_price()
